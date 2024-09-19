@@ -24,5 +24,8 @@ public class Member extends DateEntity {
     private String email;
     private String phoneNumber;
     private String imageUrl;
+    private String address;
+    private String detailedAddress;
+    private int postCode;
 }
 
