@@ -1,6 +1,7 @@
 # DamDda_BE
 
 # data initialization
+### 참고로 데이터 스키마 안맞으면 안들어갈 수도 있어서 여기 domain이랑 맞는지 확인하고 진행하세요!
 
 1. 기존에 있던 테이블 삭제
 
