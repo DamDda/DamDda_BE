@@ -24,7 +24,8 @@ spring.sql.init.data-locations=classpath:data/members.sql,\
 ```
 
 3. 데이터 잘 들어갔는지 확인 후 ddl-auto=update 로 설정 후 주석 처리
-  ```spring.jpa.hibernate.ddl-auto=update
+  ```
+spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.show-sql=true
 spring.jpa.defer-datasource-initialization=true
