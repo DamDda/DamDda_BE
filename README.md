@@ -42,6 +42,6 @@ spring.jpa.defer-datasource-initialization=true
 #  classpath:data/project_documents.sql
 ```
 
-4. C 드라이브 아래에 damdda.zip 압축 해제해서 폴더 붙여넣기
+4. C 드라이브 아래에 damdda.zip 압축 해제해서 폴더 붙여넣기  
    프로젝트별로 이미지 하나씩 있고 문서는 일단 모든 프로젝트가 공유하게 해놓음
    
