@@ -4,10 +4,10 @@ import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.member.domain.Member;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "liked_projects")

@@ -3,7 +3,8 @@ package org.eightbit.damdda.order.domain;
 import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "payments")

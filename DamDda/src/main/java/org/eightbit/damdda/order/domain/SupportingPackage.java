@@ -6,7 +6,6 @@ import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 

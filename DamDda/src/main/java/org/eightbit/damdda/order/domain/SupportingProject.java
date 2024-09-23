@@ -6,11 +6,9 @@ import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "supporting_projects")

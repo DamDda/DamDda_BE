@@ -4,7 +4,6 @@ import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 

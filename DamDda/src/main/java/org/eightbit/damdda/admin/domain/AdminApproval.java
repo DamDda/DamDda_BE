@@ -1,8 +1,9 @@
 package org.eightbit.damdda.admin.domain;
 
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.admin.dto.ApprovalUpdateDTO;
 import org.eightbit.damdda.common.domain.BaseEntity;
-import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Project;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Log4j2
 public class AdminApproval extends BaseEntity {
     @ManyToOne
     private Admin admin;
@@ -29,5 +31,15 @@ public class AdminApproval extends BaseEntity {
 
     private String approvalText;
     private Timestamp approvalAt;
+
+    public void changeApproval(ApprovalUpdateDTO approvalUpdateDTO, Admin admin) {
+        this.approval = approvalUpdateDTO.getApproval();
+        this.admin = admin;
+        if (this.approval == 2) {
+            this.approvalText = approvalUpdateDTO.getApprovalText();
+        } else {
+            this.approvalAt = Timestamp.valueOf(LocalDateTime.now());
+        }
+    }
 }
 

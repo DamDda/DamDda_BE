@@ -3,8 +3,7 @@ package org.eightbit.damdda.admin.domain;
 import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "admins")
