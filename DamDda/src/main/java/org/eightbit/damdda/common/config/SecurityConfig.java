@@ -70,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // ??
                 .authorizeRequests()
                 // "/login" 에 대한 POST 요청은 누구나 접근을 허용함
-                .antMatchers(HttpMethod.POST, "/admin/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/file/carousels/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/file/images/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/admins/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/files/carousels/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/files/projects/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 //.anyRequest().permitAll();// 임시로 모든 요청 허용(개발때만)
 
