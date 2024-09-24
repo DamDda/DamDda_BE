@@ -1,71 +1,94 @@
-INSERT INTO admin_approvals(approval, project_id) VALUES
-(0,1),
-(0,2),
-(0,3),
-(0,4),
-(0,5),
-(0,6),
-(0,7),
-(0,8),
-(0,9),
-(0,10),
-(0,11),
-(0,12),
-(0,13),
-(0,14),
-(0,15),
-(0,16),
-(0,17),
-(0,18),
-(0,19),
-(0,20),
-(0,21),
-(0,22),
-(0,23),
-(0,24),
-(0,25),
-(0,26),
-(0,27),
-(0,28),
-(0,29),
-(0,30),
-(0,31),
-(0,32),
-(0,33),
-(0,34),
-(0,35),
-(0,36),
-(0,37),
-(0,38),
-(0,39),
-(0,40),
-(0,41),
-(0,42),
-(0,43),
-(0,44),
-(0,45),
-(0,46),
-(0,47),
-(0,48),
-(0,49),
-(0,50),
-(0,51),
-(0,52),
-(0,53),
-(0,54),
-(0,55),
-(0,56),
-(0,57),
-(0,58),
-(0,59),
-(0,60),
-(0,61),
-(0,62),
-(0,63),
-(0,64),
-(0,65),
-(0,66),
-(0,67),
-(0,68),
-(0,69),
-(0,70);
+INSERT INTO admins(login_id, password) VALUES
+ ('admin','$2a$10$dVYHzWnx3B5KF2QEJg6TouWPcx7rQBg.p.MWuJwXPnZe6aqklzXX.');
+
+
+INSERT INTO admin_approvals (approval, project_id, approval_text)
+SELECT
+    r AS approval,
+    project_id,
+    CASE
+        WHEN r = 0 THEN '프로젝트 승인 대기 중...'
+        WHEN r = 1 THEN '프로젝트가 승인되었습니다.'
+        ELSE '프로젝트가 거절되었습니다. 거절 사유 : xxxx'
+        END AS approval_text
+FROM (
+         SELECT
+             CASE
+                 WHEN RAND() < 2.0 / 7 THEN 0 -- 2/7 확률로 0
+                 WHEN RAND() < 6.0 / 7 THEN 1 -- 4/7 확률로 1
+                 ELSE 2                       -- 1/7 확률로 2
+                 END AS r,
+             project_id
+         FROM (
+                  SELECT 1 AS project_id UNION ALL
+                  SELECT 2 UNION ALL
+                  SELECT 3 UNION ALL
+                  SELECT 4 UNION ALL
+                  SELECT 5 UNION ALL
+                  SELECT 6 UNION ALL
+                  SELECT 7 UNION ALL
+                  SELECT 8 UNION ALL
+                  SELECT 9 UNION ALL
+                  SELECT 10 UNION ALL
+                  SELECT 11 UNION ALL
+                  SELECT 12 UNION ALL
+                  SELECT 13 UNION ALL
+                  SELECT 14 UNION ALL
+                  SELECT 15 UNION ALL
+                  SELECT 16 UNION ALL
+                  SELECT 17 UNION ALL
+                  SELECT 18 UNION ALL
+                  SELECT 19 UNION ALL
+                  SELECT 20 UNION ALL
+                  SELECT 21 UNION ALL
+                  SELECT 22 UNION ALL
+                  SELECT 23 UNION ALL
+                  SELECT 24 UNION ALL
+                  SELECT 25 UNION ALL
+                  SELECT 26 UNION ALL
+                  SELECT 27 UNION ALL
+                  SELECT 28 UNION ALL
+                  SELECT 29 UNION ALL
+                  SELECT 30 UNION ALL
+                  SELECT 31 UNION ALL
+                  SELECT 32 UNION ALL
+                  SELECT 33 UNION ALL
+                  SELECT 34 UNION ALL
+                  SELECT 35 UNION ALL
+                  SELECT 36 UNION ALL
+                  SELECT 37 UNION ALL
+                  SELECT 38 UNION ALL
+                  SELECT 39 UNION ALL
+                  SELECT 40 UNION ALL
+                  SELECT 41 UNION ALL
+                  SELECT 42 UNION ALL
+                  SELECT 43 UNION ALL
+                  SELECT 44 UNION ALL
+                  SELECT 45 UNION ALL
+                  SELECT 46 UNION ALL
+                  SELECT 47 UNION ALL
+                  SELECT 48 UNION ALL
+                  SELECT 49 UNION ALL
+                  SELECT 50 UNION ALL
+                  SELECT 51 UNION ALL
+                  SELECT 52 UNION ALL
+                  SELECT 53 UNION ALL
+                  SELECT 54 UNION ALL
+                  SELECT 55 UNION ALL
+                  SELECT 56 UNION ALL
+                  SELECT 57 UNION ALL
+                  SELECT 58 UNION ALL
+                  SELECT 59 UNION ALL
+                  SELECT 60 UNION ALL
+                  SELECT 61 UNION ALL
+                  SELECT 62 UNION ALL
+                  SELECT 63 UNION ALL
+                  SELECT 64 UNION ALL
+                  SELECT 65 UNION ALL
+                  SELECT 66 UNION ALL
+                  SELECT 67 UNION ALL
+                  SELECT 68 UNION ALL
+                  SELECT 69 UNION ALL
+                  SELECT 70
+              ) AS project_ids
+     ) AS random_values;
