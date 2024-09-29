@@ -8,20 +8,23 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 @Getter
-public class LoginDTO extends User {
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginDTO {
 
-    private Long id;
     private String loginId;
     private String password;
     private String name;
     private String email;
 
-    public LoginDTO(Member member, Collection<? extends GrantedAuthority> authorities) {
-        super(member.getLoginId(), member.getPassword(), authorities);
-        this.id = member.getId();
-        this.loginId = member.getLoginId();
-        this.password = member.getPassword();
-        this.name = member.getName();
-        this.email = member.getEmail();
+    public Member toEntity() {
+        return Member.builder()
+                .loginId(loginId)
+                .password(password)
+                .name(name)
+                .email(email)
+                .build();
     }
 }

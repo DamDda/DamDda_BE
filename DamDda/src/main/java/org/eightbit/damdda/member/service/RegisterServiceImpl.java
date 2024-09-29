@@ -12,22 +12,9 @@ import org.springframework.stereotype.Service;
 public class RegisterServiceImpl implements RegisterService {
 
     private final RegisterRepository registerRepository;
-     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void insertMember(RegisterDTO registerDTO) {
-        Member member = Member.builder()
-                .loginId(registerDTO.getLoginId())
-                .password(passwordEncoder.encode(registerDTO.getPassword()))
-                .nickname(registerDTO.getNickname())
-                .name(registerDTO.getName())
-                .email(registerDTO.getEmail())
-                .phoneNumber(registerDTO.getPhoneNumber())
-                .address(registerDTO.getAddress())
-                .detailedAddress(registerDTO.getDetailedAddress())
-                .postCode(registerDTO.getPostCode())
-                .build();
-
-        registerRepository.save(member);
+    public void insertMember(RegisterDTO request) {
+        registerRepository.save(request.toEntity());
     }
 }
