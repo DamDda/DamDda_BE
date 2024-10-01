@@ -1,27 +1,21 @@
 package org.eightbit.damdda.member.service;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.admin.repository.MemberRepository;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
+import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.repository.LoginRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class LoginServiceImpl implements LoginService{
 
     private final LoginRepository loginRepository;
-
-    @Autowired
-    public LoginServiceImpl(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
-    }
 
     @Override
     public MemberDTO login(LoginDTO loginDTO, HttpSession session) {
@@ -43,4 +37,17 @@ public class LoginServiceImpl implements LoginService{
     public void searchId() {
 
     }
+
+//    public MemberDTO convertToMemberDTO(RegisterDTO registerDTO) {
+//        MemberDTO memberDTO = new MemberDTO(registerDTO.getLoginId(),
+//                registerDTO.getPassword(),
+//                registerDTO.getNickname(),
+//                registerDTO.getName(),
+//                registerDTO.getEmail(),
+//                registerDTO.getPhoneNumber(),
+//                registerDTO.getAddress(),
+//                registerDTO.getDetailedAddress(),
+//                registerDTO.getPostCode());
+//        return memberDTO;
+//    }
 }

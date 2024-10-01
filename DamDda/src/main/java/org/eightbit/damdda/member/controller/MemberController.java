@@ -14,12 +14,13 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/members")
 public class MemberController {
 
     private final RegisterService registerService;
     private final LoginServiceImpl loginServiceImpl;
 
-    @PostMapping("/members/profile")
+    @PostMapping("/profile")
     public String insertMember (@RequestBody RegisterDTO registerDTO){
 
         try {
@@ -30,7 +31,31 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/members/login")
+    @GetMapping("/profile/idcheck")
+    public ResponseEntity<String> checkLoginId(@RequestParam("loginId") String loginId){
+        try {
+            if (registerService.checkLoginId(loginId)){
+                return new ResponseEntity<>("unavailable", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("available", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/profile/nickname")
+    public ResponseEntity<String> checkNickname(@RequestParam("nickname") String nickname){
+        try {
+            if (registerService.checkNickname(nickname)){
+                return new ResponseEntity<>("unavailable", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("available", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody LoginDTO loginDTO, HttpSession session){
         try {
             MemberDTO memberDTO = loginServiceImpl.login(loginDTO, session);
@@ -41,7 +66,7 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/members/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session){
         loginServiceImpl.logout(session);
         return ResponseEntity.ok("logout");
