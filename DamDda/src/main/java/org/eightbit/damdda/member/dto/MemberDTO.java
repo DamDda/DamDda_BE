@@ -22,6 +22,7 @@ public class MemberDTO {
 
     public static MemberDTO of(Member member) {
         return MemberDTO.builder()
+                .loginId(member.getLoginId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .name(member.getName())

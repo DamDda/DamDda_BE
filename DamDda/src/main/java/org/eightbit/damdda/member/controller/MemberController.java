@@ -59,7 +59,7 @@ public class MemberController {
     public ResponseEntity<String> login (@RequestBody LoginDTO loginDTO, HttpSession session){
         try {
             MemberDTO memberDTO = loginServiceImpl.login(loginDTO, session);
-            return ResponseEntity.ok("welcome" + memberDTO.getLoginId());
+            return ResponseEntity.ok("welcome " + memberDTO.getLoginId());
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

@@ -2,8 +2,8 @@ package org.eightbit.damdda.member.dto;
 
 import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
