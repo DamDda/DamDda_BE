@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
+import org.eightbit.damdda.member.service.LoginService;
 import org.eightbit.damdda.member.service.LoginServiceImpl;
+import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.member.service.RegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,8 @@ import javax.servlet.http.HttpSession;
 public class MemberController {
 
     private final RegisterService registerService;
-    private final LoginServiceImpl loginServiceImpl;
+    private final LoginService loginService;
+    private final MemberService memberService;
 
     @PostMapping("/profile")
     public String insertMember (@RequestBody RegisterDTO registerDTO){
@@ -58,7 +61,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody LoginDTO loginDTO, HttpSession session){
         try {
-            MemberDTO memberDTO = loginServiceImpl.login(loginDTO, session);
+            MemberDTO memberDTO = loginService.login(loginDTO, session);
             return ResponseEntity.ok("welcome " + memberDTO.getLoginId());
 
         } catch (IllegalArgumentException e) {
@@ -68,7 +71,17 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session){
-        loginServiceImpl.logout(session);
+        loginService.logout(session);
         return ResponseEntity.ok("logout");
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
+        try {
+            MemberDTO memberDTO = memberService.getMember(loginId);
+            return ResponseEntity.ok(memberDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }
