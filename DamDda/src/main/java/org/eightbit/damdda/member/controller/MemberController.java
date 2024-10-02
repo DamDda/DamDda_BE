@@ -5,11 +5,11 @@ import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.service.LoginService;
-import org.eightbit.damdda.member.service.LoginServiceImpl;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.member.service.RegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -84,4 +84,16 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+//    @PutMapping("/profile/Photo")
+//    public ResponseEntity<String> updateProfilePhoto (@RequestBody MemberDTO memberDTO, HttpSession session){
+//
+//    }
+//
+//    @Transactional
+//    @PutMapping("/profile")
+//    public ResponseEntity<String> updateProfile (@RequestBody MemberDTO memberDTO, HttpSession session){
+//
+//    }
 }
+

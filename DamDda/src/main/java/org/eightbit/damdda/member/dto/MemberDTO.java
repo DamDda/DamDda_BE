@@ -38,4 +38,18 @@ public class MemberDTO {
                 .build();
     }
 
+    public Member toEntity() {
+        return MemberDTO.builder()
+                .loginId(loginId)
+                .password(password)
+                .nickname(nickname)
+                .name(name)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .address(address)
+                .detailedAddress(detailedAddress)
+                .postCode(postCode)
+                .imageUrl(imageUrl)
+                .build().toEntity();
+    }
 }
