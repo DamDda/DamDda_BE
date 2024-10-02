@@ -38,13 +38,17 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-//    @Override
-//    public MemberDTO updateMember(String loginId, MemberDTO updateMemberDTO) {
-//        Member member = memberRepository.findByLoginId(loginId)
-//                .orElseThrow(() -> new IllegalArgumentException("not Found"));
+    @Override
+    public MemberDTO updateMember(String loginId, MemberDTO updateMemberDTO) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("not Found"));
+
 //        member.updateInfo(updateMemberDTO.toEntity());
-//        return null;
-//    }
+
+        memberRepository.save(member);
+
+        return MemberDTO.of(member);
+    }
 
 
 }
