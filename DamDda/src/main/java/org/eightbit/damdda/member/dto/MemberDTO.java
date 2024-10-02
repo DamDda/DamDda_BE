@@ -18,6 +18,9 @@ public class MemberDTO {
     private String name;
     private String email;
     private String phoneNumber;
+    private String address;
+    private String detailedAddress;
+    private int postCode;
     private String imageUrl;
 
     public static MemberDTO of(Member member) {
@@ -28,6 +31,9 @@ public class MemberDTO {
                 .name(member.getName())
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
+                .address(member.getAddress())
+                .detailedAddress(member.getDetailedAddress())
+                .postCode(member.getPostCode())
                 .imageUrl(member.getImageUrl())
                 .build();
     }
