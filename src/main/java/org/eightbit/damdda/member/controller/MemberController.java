@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.member.domain.AccountCredentials;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
-import org.eightbit.damdda.member.dto.LoginDTO;
-import org.eightbit.damdda.member.dto.MemberDTO;
-import org.eightbit.damdda.member.dto.RegisterDTO;
+import org.eightbit.damdda.member.dto.*;
 import org.eightbit.damdda.member.service.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -186,14 +184,14 @@ public class MemberController {
         }
     }
 
-//    @PostMapping("/findpw")
-//    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
-//        try {
-//            return null;
-//        } catch (IllegalArgumentException e) {
-//            return null;
-//        }
-//    }
+    @PostMapping("/findpw")
+    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+        try {
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 //
 //    @PutMapping("/findpw")
 //    public ResponseEntity<String> modifyPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
