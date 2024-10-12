@@ -60,6 +60,7 @@ public class MemberController {
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
+        System.out.println(user+"**********");
         Long memberId = user.getMemberId();
         Map userInfo = memberService.getUserInfo(memberId);
         return ResponseEntity.ok().body(userInfo);
@@ -111,10 +112,24 @@ public class MemberController {
             Authentication auth = authenticationManager.authenticate(creds);
             String currentUserNickname = ((User) auth.getPrincipal()).getNickname();
             String jwts = jwtService.getToken(((User) auth.getPrincipal()).getMember().getId(), auth.getName());
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
-                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-                    .body(Map.of("X-Nickname", currentUserNickname));
+//            String jwt = "sample-jwt-token";  // 실제 JWT 토큰 생성 로직 사용
+            Map<String, String> responseBody = Map.of("X-Nickname", currentUserNickname);
+            // 응답 객체 생성
+            ResponseEntity<Map<String, String>> response = ResponseEntity.ok()
+                    .header("x-damdda-authorization", "Bearer " + jwts)
+                    .header("Access-Control-Expose-Headers", "x-damdda-authorization")
+                    .body(responseBody);
+
+            // 로그에 응답 헤더 정보 출력
+            System.out.println("Response Headers: " + response.getHeaders());
+
+            return response;
+
+
+//            return ResponseEntity.ok()
+//                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
+//                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "x-damdda-authorization")
+//                    .body(Map.of("X-Nickname", currentUserNickname));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }

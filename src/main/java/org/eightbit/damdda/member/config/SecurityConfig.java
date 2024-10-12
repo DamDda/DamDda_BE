@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/payment/**","/member/check/id", "/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/files/projects/**", "/api/projects/projects","/api/projects/{projectId}").permitAll()
+                .antMatchers(HttpMethod.GET, "/member/check/id", "/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/files/projects/**", "/api/projects/projects","/api/projects/{projectId}").permitAll()
                 .antMatchers(HttpMethod.POST, "/member/profile", "/member/login").permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
@@ -73,8 +73,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 주소
 //        config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.applyPermitDefaultValues();
+        config.addExposedHeader("x-damdda-authorization");
 
         source.registerCorsConfiguration("/**", config);
         return source;
