@@ -173,9 +173,11 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+    @PutMapping("/update")
+    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO,@AuthenticationPrincipal User user){
         try {
+            memberDTO.setLoginId(user.getLoginId());
+            log.info(memberDTO);
             return ResponseEntity.ok(memberService.updateMember(memberDTO));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -184,11 +186,46 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/findpw")
-    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+    @GetMapping("/check")
+    public ResponseEntity<Map<String, Long>> checkMemberDetails(MemberSearchDTO memberSearchDTO){
         try {
+            return ResponseEntity.ok(Map.of("id", loginService.checkMemberDetails(memberSearchDTO)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Map<String, Boolean>> modifyPassword(
+            @PathVariable Long id,
+            @RequestBody PasswordDTO passwordDTO
+    ){
+        try {
+            boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
+            return ResponseEntity.ok(Map.of("isSuccess", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@PathVariable Long id){
+        try {
+
             return null;
         } catch (IllegalArgumentException e) {
+            return null;
+        } catch (NoSuchElementException e) {
+            return null;
+        } catch (Exception e) {
             return null;
         }
     }

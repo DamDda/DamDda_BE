@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.MemberDTO;
@@ -106,17 +107,25 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberDTO updateMember(MemberDTO memberDTO) {
-        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        memberDTO.setNickname(memberDTO.getNickname());
-        memberDTO.setEmail(memberDTO.getEmail());
-        memberDTO.setPhoneNumber(memberDTO.getPhoneNumber());
-        memberDTO.setAddress(memberDTO.getAddress());
-        memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
-        memberDTO.setPostCode(memberDTO.getPostCode());
-        memberDTO.setImageUrl(memberDTO.getImageUrl());
-        this.memberRepository.save(memberDTO.toEntity());
+        Member member = memberRepository.findByLoginId(memberDTO.getLoginId()).orElseThrow();
+        log.info(member);
+//        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        member.setNickname(memberDTO.getNickname());
+        member.setEmail(memberDTO.getEmail());
+        member.setPhoneNumber(memberDTO.getPhoneNumber());
+        member.setAddress(memberDTO.getAddress());
+//        memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
+//        memberDTO.setPostCode(memberDTO.getPostCode());
+        member.setImageUrl(memberDTO.getImageUrl());
+        log.info("여기까진 괜찮음"+member.getImageUrl());
+
+        this.memberRepository.save(member);
         return memberDTO;
     }
-
+    @Override
+    public Boolean deleteMember(Long id) {
+//        memberRepository.
+        return null;
+    }
 
 }
