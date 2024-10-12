@@ -39,7 +39,7 @@ public class TossPayService {
         HttpHeaders headers = new HttpHeaders();
 
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
-        headers.add("x-damdda-authorization",authorizationHeader);
+        headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
         System.out.println("tosspay service- authorizationHeader"+authorizationHeader);
 

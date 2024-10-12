@@ -246,7 +246,7 @@ public ResponseEntity<TossResponse> tossSuccess(
         @RequestParam("paymentKey") String paymentKey,
         @RequestParam("orderId") String orderId,
         @RequestParam("amount") String amount,
-        @RequestHeader("x-damdda-authorization") String authorizationHeader,
+        @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader,
         HttpServletResponse response) throws IOException {
 
     // 결제 승인 처리 로그 출력
@@ -285,7 +285,7 @@ public ResponseEntity<TossResponse> tossSuccess(
 //    }
     @PostMapping("/kakao/ready")
     public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
-                                                              @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeade) {
+                                                              @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
         System.out.println("x-damdda-authorization"+"//////");
         System.out.println(orderId+"************");
