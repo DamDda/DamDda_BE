@@ -3,7 +3,6 @@ package org.eightbit.damdda.member.dto;
 
 import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -21,8 +20,7 @@ public class MemberDTO {
     private String address;
     private String detailedAddress;
     private int postCode;
-    private MultipartFile imageUrl;
-
+    private String imageUrl;
 
     public static MemberDTO of(Member member) {
         return MemberDTO.builder()
@@ -36,12 +34,13 @@ public class MemberDTO {
                 .address(member.getAddress())
                 .detailedAddress(member.getDetailedAddress())
                 .postCode(member.getPostCode())
-//                .imageUrl(member.getImageUrl())
+                .imageUrl(member.getImageUrl())
                 .build();
     }
 
     public Member toEntity() {
-        return MemberDTO.builder()
+        return Member.builder()
+                .id(id)
                 .loginId(loginId)
                 .password(password)
                 .nickname(nickname)
@@ -52,6 +51,6 @@ public class MemberDTO {
                 .detailedAddress(detailedAddress)
                 .postCode(postCode)
                 .imageUrl(imageUrl)
-                .build().toEntity();
+                .build();
     }
 }

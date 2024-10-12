@@ -157,15 +157,57 @@ public class MemberController {
 //        }
 //    }
 
-//    @PostMapping("/confirmpw")
-//    public ResponseEntity<?> confirmPassword (@RequestBody String password){
+    @GetMapping("/confirmpw")
+    public ResponseEntity<?> confirmPassword (@RequestParam String password){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String loginId = user.getMember().getLoginId();
+            System.out.println(loginId + " " + password);
+            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
+
+            if(memberDTO != null){
+                return ResponseEntity.ok(memberDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+        try {
+            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+//    @PostMapping("/findpw")
+//    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
 //        try {
-//            String loginId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//            return null;
+//        } catch (IllegalArgumentException e) {
+//            return null;
+//        }
+//    }
+//
+//    @PutMapping("/findpw")
+//    public ResponseEntity<String> modifyPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+//        try {
+//            System.out.println(passwordModifyDTO);
+//            return null;
+//        } catch (IllegalArgumentException e) {
+//            return null;
+//        }
+//    }
 
     @PutMapping("/profile/Photo")
     public ResponseEntity<String> updateProfilePhoto (@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
-
             String fileName = memberService.uploadFile(imageUrl);
             return ResponseEntity.ok(fileName);
         } catch (IllegalArgumentException e) {

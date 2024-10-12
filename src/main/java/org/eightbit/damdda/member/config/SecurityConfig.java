@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/member/check/id", "/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/api/projects/projects","/api/projects/{projectId}").permitAll()
+                .antMatchers(HttpMethod.GET, "/member/check/id", "/files/projects/**","/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/api/projects/projects","/api/projects/{projectId}").permitAll()
                 .antMatchers(HttpMethod.POST, "/member/profile", "/member/login").permitAll()
                 .anyRequest().authenticated().and()
                 .logout()

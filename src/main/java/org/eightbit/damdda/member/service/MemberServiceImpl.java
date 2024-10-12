@@ -62,7 +62,6 @@ public class MemberServiceImpl implements MemberService {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,fileName,file.getInputStream(),null).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3.putObject(putObjectRequest);
         return amazonS3.getUrl(bucketName,fileName).toString();
-
     }
 
     @Override
@@ -71,6 +70,8 @@ public class MemberServiceImpl implements MemberService {
         DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName,fileName);
         amazonS3.deleteObject(deleteObjectRequest);
     }
+
+
     @Override
     public Optional<Member> findById(Long memberId){
         return memberRepository.findById(memberId);
@@ -84,37 +85,38 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getMember(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) {
-            return MemberDTO.of(member.get());
-        }else {
-            return null;
-        }
+        return member.map(MemberDTO::of).orElse(null);
     }
 
-//    @Override
-//    public MemberDTO confirmPw(String loginId, String password) {
-//        Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
-//        System.out.println("박세연" + optionalMember);
-//        System.out.println(2 + optionalMember.get().getPassword());
-//        System.out.println(3 + passwordEncoder.encode(password));
-//        if(optionalMember.isPresent()) {
-//            Member member = optionalMember.get();
-//            if(passwordEncoder.matches(password, member.getPassword())) {
-//                return MemberDTO.of(member);
-//            }
-//        }
-//        return null;
-//    }
+    @Override
+    public MemberDTO confirmPw(String loginId, String password) {
+        Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
+        if(optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            String encodedPassword = member.getPassword();
+            if(passwordEncoder.matches(password, encodedPassword)) {
+                MemberDTO memberDTO = MemberDTO.of(member);
+                memberDTO.setPassword(null);
+                return memberDTO;
+            }
+        }
+        return null;
+    }
 
-//    @Override
-//    public MemberDTO updateMember(MemberDTO memberDTO) {
-//        String userId = SecurityContextHolder.getPrincipal().getLoginId();
-//
-//        Optional<Member> member = memberRepository.findByLoginId(loginId);
-//
-//
-//        return null;
-//    }
+    @Transactional
+    @Override
+    public MemberDTO updateMember(MemberDTO memberDTO) {
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        memberDTO.setNickname(memberDTO.getNickname());
+        memberDTO.setEmail(memberDTO.getEmail());
+        memberDTO.setPhoneNumber(memberDTO.getPhoneNumber());
+        memberDTO.setAddress(memberDTO.getAddress());
+        memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
+        memberDTO.setPostCode(memberDTO.getPostCode());
+        memberDTO.setImageUrl(memberDTO.getImageUrl());
+        this.memberRepository.save(memberDTO.toEntity());
+        return memberDTO;
+    }
 
 
 }

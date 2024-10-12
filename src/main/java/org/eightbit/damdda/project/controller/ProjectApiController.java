@@ -129,6 +129,7 @@ public class ProjectApiController {
 
         Long projectId = projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
 
+        log.info("말해줘요"+projectId);
 
 //        if (submit.equals("저장")) {
 //            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
