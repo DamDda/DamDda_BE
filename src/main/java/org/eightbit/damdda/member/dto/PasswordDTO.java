@@ -7,5 +7,6 @@ import lombok.*;
 @Setter
 @ToString
 public class PasswordDTO {
+    private String currentPassword;
     private String password;
 }

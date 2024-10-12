@@ -104,6 +104,28 @@ public class MemberServiceImpl implements MemberService {
         return null;
     }
 
+    @Override
+    public String confirmPwd(String loginId, String password) {
+        Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            String encodedPassword = member.getPassword();
+            log.info("Stored encoded password: {}", encodedPassword);
+            log.info("Input password: {}", password);
+            try {
+                boolean matches = passwordEncoder.matches(password, encodedPassword);
+                System.out.println("Password matches: " + matches);
+                return matches ? "success" : null;
+            } catch (Exception e) {
+                System.out.println("Error in passwordEncoder.matches: " + e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+        return null;
+    }
+
     @Transactional
     @Override
     public MemberDTO updateMember(MemberDTO memberDTO) {

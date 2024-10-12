@@ -18,4 +18,5 @@ public interface MemberService {
     MemberDTO updateMember(MemberDTO memberDTO);
     MemberDTO confirmPw(String loginId, String password);
     Boolean deleteMember(Long id);
+    String confirmPwd(String loginId, String password);
 }

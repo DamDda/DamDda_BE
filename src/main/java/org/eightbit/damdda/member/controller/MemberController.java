@@ -202,11 +202,18 @@ public class MemberController {
     @PutMapping("/{id}/password")
     public ResponseEntity<Map<String, Boolean>> modifyPassword(
             @PathVariable Long id,
-            @RequestBody PasswordDTO passwordDTO
+            @RequestBody PasswordDTO passwordDTO,
+            @AuthenticationPrincipal User user
     ){
         try {
-            boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
-            return ResponseEntity.ok(Map.of("isSuccess", result));
+            log.info("여기여기"+memberService.confirmPwd(user.getLoginId(), passwordDTO.getCurrentPassword()));
+            if(memberService.confirmPwd(user.getLoginId(), passwordDTO.getCurrentPassword()) != null) {
+                boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
+                return ResponseEntity.ok(Map.of("isSuccess", result));
+            }else{
+                return ResponseEntity.badRequest().body(Map.of("success",false));
+            }
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (NoSuchElementException e) {
@@ -262,5 +269,7 @@ public class MemberController {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
 //        }
 //    }
+
+
 }
 
