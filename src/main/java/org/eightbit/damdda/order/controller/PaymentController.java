@@ -285,11 +285,11 @@ public ResponseEntity<TossResponse> tossSuccess(
 //    }
     @PostMapping("/kakao/ready")
     public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
-                                                              @RequestHeader("x-damdda-authorization") String authorizationHeader) {
+                                                              @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeade) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
-        System.out.println(authorizationHeader+"//////");
+        System.out.println("x-damdda-authorization"+"//////");
         System.out.println(orderId+"************");
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,authorizationHeader);
+        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,"x-damdda-authorization");
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 
@@ -315,9 +315,9 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoApproveResponse> afterPayRequest(
             @RequestParam("pg_token") String pgToken,
             @PathVariable("order_id") Long orderId,  // PathVariable로 order_id 받음
-            @RequestHeader("x-damdda-authorization") String authorizationHeader,
+            @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader, HttpServletResponse response) {
 
-            HttpServletResponse response) {
+
 
         System.out.println("결제 성공. Order ID: " + orderId + ", PG Token: " + pgToken);
         System.out.println(authorizationHeader+"//////");
