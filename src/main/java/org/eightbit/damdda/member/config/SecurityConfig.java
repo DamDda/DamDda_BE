@@ -5,6 +5,7 @@ import org.eightbit.damdda.member.except.AuthEntryPoint;
 import org.eightbit.damdda.member.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.member.filter.LoginFilter;
 import org.eightbit.damdda.member.service.JwtService;
+import org.eightbit.damdda.order.KakaoPayIpFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,11 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManagerBean(), jwtService); // 로그인 필터
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtService, userDetailsService); // JWT 인증 필터
+        KakaoPayIpFilter kakaoPayIpFilter = new KakaoPayIpFilter();
 
         http.csrf().disable()
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/payment/kakao/success/", "/payment/kakao/cancel/", "/payment/kakao/fail/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/check/id", "/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/files/projects/**", "/api/projects/projects","/api/projects/{projectId}").permitAll()
                 .antMatchers(HttpMethod.POST, "/member/profile", "/member/login").permitAll()
                 .anyRequest().authenticated().and()
@@ -60,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()
+                .addFilterBefore(kakaoPayIpFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)  // 로그인 필터 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터 추가
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
