@@ -40,7 +40,7 @@ public class Project extends DateEntity {
     private String title;
     private String description;
 
-//    @Column(length = 3000)
+//    @Column(length = 10000000)
     @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
     private Timestamp startDate;

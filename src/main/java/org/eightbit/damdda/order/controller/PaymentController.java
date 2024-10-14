@@ -282,10 +282,12 @@ public ResponseEntity<TossResponse> tossSuccess(
 //        return ResponseEntity.ok(kakaoReadyResponse);
 //    }
     @PostMapping("/kakao/ready")
-    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData) {
+    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
+                                                              @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
-        System.out.println(orderId+"************");
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId);
+        System.out.println(authorizationHeader+"//////");
+        System.out.println(orderId+"**");
+        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,authorizationHeader);
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 

@@ -29,7 +29,7 @@ public class KakaoPayService {
     private KakaoReadyResponse kakaoReady;
 
     // 결제 준비
-    public KakaoReadyResponse kakaoPayReady(Long orderId) {
+    public KakaoReadyResponse kakaoPayReady(Long orderId,String authorizationHeader) {
 
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();

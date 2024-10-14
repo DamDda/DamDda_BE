@@ -314,7 +314,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(project.getDescription())
                 .fundsReceive(project.getFundsReceive())
                 .targetFunding(project.getTargetFunding())
-                .category(project.getCategory().getName())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
                 .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
@@ -379,8 +379,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .descriptionDetail(project.getDescriptionDetail())
                     .fundsReceive(project.getFundsReceive())
                     .targetFunding(project.getTargetFunding())
-                    .category(project.getCategory().getName())
-                    .nickName(project.getMember().getNickname())
+                    .category(project.getCategory() == null ? null : project.getCategory().getName())
+                    .nickName(project.getMember() == null ? null : project.getMember().getNickname())
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
                     .supporterCnt(project.getSupporterCnt())
@@ -475,7 +475,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTags(tags);  // 프로젝트에 태그 추가
 
 
-        if (submit) adminApprovalService.submitProject(project);
 //
 //        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
 //            imgService.saveImages(project, productImages, descriptionImages);
@@ -626,6 +625,10 @@ public class ProjectServiceImpl implements ProjectService {
         project.setEndDate(projectDetailDTO.getEndDate());
         project.setTargetFunding(projectDetailDTO.getTargetFunding());
         project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
+
+
+        if (submit) adminApprovalService.submitProject(project);
+
 
 
         return project.getId();

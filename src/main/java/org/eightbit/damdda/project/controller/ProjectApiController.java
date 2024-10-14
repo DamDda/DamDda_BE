@@ -85,7 +85,7 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
-        Long memberId = user.getMemberId();
+        Long memberId = user == null ? 0L : user.getMemberId();
         ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
         return projectResponseDetailDTO;
     }
