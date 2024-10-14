@@ -61,7 +61,6 @@ public class ProjectApiController {
     @GetMapping("/write")
     public List<WritingProjectDTO> getWritingProjects(@AuthenticationPrincipal User user) {
         Long memberId = user.getMemberId();
-
         return projectService.getWritingProjectDTO(memberId);
     }
 

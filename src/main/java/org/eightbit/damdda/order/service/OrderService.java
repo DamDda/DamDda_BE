@@ -32,7 +32,7 @@ public class OrderService {
     private final org.eightbit.damdda.order.repository.PaymentRepository paymentRepository;
     private final org.eightbit.damdda.order.repository.SupportingProjectRepository supportingProjectRepository;
     private final org.eightbit.damdda.order.repository.SupportingPackageRepository supportingPackageRepository;
-    private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
 
 
