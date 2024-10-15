@@ -20,7 +20,19 @@ public class SupportingProject {
     private Long SupportingProjectId;
 
     private LocalDateTime supportedAt; // 후원 시간
+<<<<<<< Updated upstream
 
+=======
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
+
+>>>>>>> Stashed changes
     @ManyToOne
     @JoinColumn(name = "user_id")  // 외래 키로 참조할 필드
     private Member user;
@@ -28,6 +40,7 @@ public class SupportingProject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+<<<<<<< Updated upstream
 
     @ManyToOne
     @JoinColumn(name = "payment_id")
@@ -36,5 +49,7 @@ public class SupportingProject {
     @ManyToOne
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+=======
+>>>>>>> Stashed changes
 }
 

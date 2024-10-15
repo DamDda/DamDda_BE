@@ -1,6 +1,7 @@
 package org.eightbit.damdda.project.controller;
 
 
+import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.dto.*;
@@ -214,6 +215,13 @@ public class ProjectApiController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
+    }
+    // 태욱
+    // 일별 후원액 가져오는 쿼리
+    @GetMapping("/dailySupporting/{projectId}")
+    public ResponseEntity<List<?>> getDailySupportingByProjectId(@PathVariable Long projectId) {
+        log.info(projectService.getDailySupportingByProjectId(projectId));
+        return ResponseEntity.ok(projectService.getDailySupportingByProjectId(projectId));
     }
 
 

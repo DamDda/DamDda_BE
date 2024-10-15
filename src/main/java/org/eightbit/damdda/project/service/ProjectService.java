@@ -30,5 +30,14 @@ public interface ProjectService {
                        boolean submit,
                        List<MultipartFile> productImages,
                        List<MultipartFile> descriptionImages,
+<<<<<<< Updated upstream
                        List<MultipartFile> docs);
+=======
+                       List<MultipartFile> docs,
+                       List<MetaDTO> updateProductImage,
+                       List<MetaDTO> updateDescriptionImage,
+                       List<MetaDTO> updateDocs
+                       );
+    List<?> getDailySupportingByProjectId(Long projectId);
+>>>>>>> Stashed changes
 }

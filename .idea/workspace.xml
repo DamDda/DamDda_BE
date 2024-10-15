@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="" />
+=======
+    <list default="true" id="1badf8a7-30ae-4441-baf5-e44702969a3c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/DailySupporting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingPackage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingProject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/dto/OrderDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/dto/OrderDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingPackageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingPackageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingProjectRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingProjectRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/deliveries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/deliveries.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/members.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/members.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/orders.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/orders.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/payments.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/payments.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/test.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/test.ipynb" afterDir="false" />
+    </list>
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +46,18 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+<<<<<<< Updated upstream
     "RunOnceActivity.ShowReadmeOnStart": "true",
+=======
+    "Gradle.Build DamDda_BE.executor": "Run",
+    "Gradle.DamDda_BE [clean].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.DamDdaApplication.executor": "Run",
+>>>>>>> Stashed changes
     "git-widget-placeholder": "feature/project",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/ijuhyeon/juhyeon/computer/git/DamDda_BE",
@@ -45,6 +82,25 @@
       <option name="presentableId" value="Default" />
       <updated>1726455745756</updated>
       <workItem from="1726455747229" duration="17000" />
+<<<<<<< Updated upstream
+=======
+      <workItem from="1727837533004" duration="168000" />
+      <workItem from="1727837707801" duration="15727000" />
+      <workItem from="1727860478789" duration="5148000" />
+      <workItem from="1727945444611" duration="3406000" />
+      <workItem from="1727951529729" duration="187000" />
+      <workItem from="1728004742897" duration="3704000" />
+      <workItem from="1728367410066" duration="9236000" />
+      <workItem from="1728450368322" duration="24498000" />
+      <workItem from="1728519714637" duration="5987000" />
+      <workItem from="1728538796591" duration="1614000" />
+      <workItem from="1728544118386" duration="357000" />
+      <workItem from="1728564216950" duration="1328000" />
+      <workItem from="1728604757887" duration="5213000" />
+      <workItem from="1728629568335" duration="6606000" />
+      <workItem from="1728897907271" duration="10867000" />
+      <workItem from="1728951303828" duration="4811000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>

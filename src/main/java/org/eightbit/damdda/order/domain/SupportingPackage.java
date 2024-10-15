@@ -4,6 +4,8 @@ import lombok.*;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "supporting_packages")
@@ -22,11 +24,20 @@ public class  SupportingPackage {
     @JoinColumn(name = "supporting_project_id")
     private SupportingProject supportingProject;
 
+<<<<<<< Updated upstream
     @ManyToOne
     @JoinColumn(name = "supporting_package_id")
     private ProjectPackage supportingPackage;
 
     private Integer packageCount;
+=======
+    @ManyToMany(mappedBy = "supportingPackages")
+    private Set<Order> orders = new HashSet<>(); // 역방향 다대다 관계
+
+    private String packageName;
+    private Long packagePrice;
+    private Long packageCount;
+>>>>>>> Stashed changes
 
 
 }

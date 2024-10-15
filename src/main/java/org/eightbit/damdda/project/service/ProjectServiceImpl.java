@@ -48,7 +48,46 @@ public class ProjectServiceImpl implements ProjectService {
     private final LikedProjectRepository likedProjectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectDocumentRepository projectDocumentRepository;
+<<<<<<< Updated upstream
 //    private final CategoryRepository categoryRepository;
+=======
+    private final SupportingProjectService supportingProjectService;
+
+    @Override
+    public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
+//수정필요
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
+        List<String> productImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
+                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .collect(Collectors.toList());
+
+        List<String> descriptionImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
+                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .collect(Collectors.toList());
+
+        List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
+
+//        List<String> certDocs = projectDocs.stream()
+//                .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
+//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+//                .collect(Collectors.toList());
+//        List<String> reqDocs = projectDocs.stream()
+//                .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
+//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+//                .collect(Collectors.toList());
+
+        List<String> docs = projectDocs.stream()
+                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .collect(Collectors.toList());
+>>>>>>> Stashed changes
 
 
 //    private final TagRepository tagRepository;
@@ -669,5 +708,8 @@ public class ProjectServiceImpl implements ProjectService {
         return result.orElseThrow();
     }
 
-
+    @Override
+    public List<?> getDailySupportingByProjectId(Long projectId) {
+       return supportingProjectService.getDailySupportingByProjectId(projectId);
+    }
 }
