@@ -128,6 +128,7 @@ public class PackageServiceImpl implements PackageService {
     @Override
     @Transactional
     public void modifyPackage(PackageDTO packageDTO, Long project_id) {
+        log.info("날좀보소"+packageDTO);
         // 기존의 projectPackage 조회
         ProjectPackage projectPackage = packageRepository.findById(packageDTO.getId()).orElseThrow(()-> new NoSuchElementException("그런 패키지는 없음"));
         List<ProjectRewards> projectRewards = packageRewardsRepository.findRewardsByProjectId(project_id);
@@ -148,6 +149,7 @@ public class PackageServiceImpl implements PackageService {
         projectPackage.getPackageRewards().clear();
         projectPackage.addPackageReward(newPackageRewards); //기존의 객체를 초기화하고 새로운 객체를 한 번에 저장.
         // projectPackage 업데이트
+
         projectPackage.change(packageDTO.getName(), packageDTO.getPrice(), packageDTO.getQuantityLimited());
         // 변경사항 저장
         packageRepository.save(projectPackage);
