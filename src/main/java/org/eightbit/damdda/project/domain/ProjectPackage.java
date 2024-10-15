@@ -1,7 +1,10 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
+import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,8 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectPackage {
-
+public class ProjectPackage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +33,8 @@ public class ProjectPackage {
     private int packagePrice;
 
     private int quantityLimited;
+
+    private int salesQuantity; // 판매된 갯수.
 
     public void change(String name, int price, int quantityLimited) {
         this.packageName = name;

@@ -36,29 +36,33 @@ public class PackageServiceImpl implements PackageService {
     //선물 등록
     @Override
     @Transactional
-    public void registerReward(RewardDTO rewardDTO, Long project_id) throws JsonProcessingException {
+    public Long registerReward(RewardDTO rewardDTO, Long project_id) throws JsonProcessingException {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new EntityNotFoundException("project not found"));
         ProjectRewards projectRewards = rewardDtoToEntity(rewardDTO); //reward dto -> entity
         projectRewards.setOptionList(rewardDTO.getOptionList());  //json 역직렬화
         projectRewards.setPackageReward(project);
-        rewardRepository.save(projectRewards);
+        ProjectRewards reward = rewardRepository.save(projectRewards);
+        return reward.getId();
     }
 
     //패키지 등록
-    public void registerPackage(PackageDTO packageDTO, Long projectId) {
+    public Long registerPackage(PackageDTO packageDTO, Long projectId) {
         ProjectPackage projectPackage = packageDTOToEntity(packageDTO);
         ProjectPackage savedPackage = packageRepository.save(projectPackage);
         List<PackageRewards> newPackageRewards = new ArrayList<>();
         for (RewardDTO rewardDTO : packageDTO.getRewardList()) {
-            PackageRewards packageRewards = packageRewardsRepository.findPackageRewardByRewardName(rewardDTO.getName()); //아이디가 아닌 이름으로 불러옴
-            PackageRewards newpackageRewards = PackageRewards.builder().projectPackage(projectPackage).projectReward(packageRewards.getProjectReward()).rewardCount(rewardDTO.getCount()).project(packageRewards.getProject()).build();
-            newPackageRewards.add(newpackageRewards);
+            List<PackageRewards> packageRewards = packageRewardsRepository.findPackageRewardByRewardId(rewardDTO.getId());
+            for(PackageRewards pr : packageRewards){
+                PackageRewards newpackageRewards = PackageRewards.builder().projectPackage(projectPackage).projectReward(pr.getProjectReward()).rewardCount(rewardDTO.getCount()).project(pr.getProject()).build();
+                newPackageRewards.add(newpackageRewards);
+            }
         }
         //기존의 packageReward는(projectReward만 연결된) 중간 저장을 위해 남겨둠.
         packageRewardsRepository.saveAll(newPackageRewards);
         // 이미 저장된 ProjectPackage에 PackageRewards를 추가합니다.
         savedPackage.getPackageRewards().addAll(newPackageRewards);
-        packageRepository.save(savedPackage);  // 변경사항을 저장.
+        ProjectPackage resultPackage = packageRepository.save(savedPackage);  // 변경사항을 저장.
+        return resultPackage.getId();
     }
 
 
@@ -102,11 +106,9 @@ public class PackageServiceImpl implements PackageService {
     public List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException {
         List<PackageDTO> packageDTOList = new ArrayList<>();
         List<PackageRewards> packageRewardList = packageRewardsRepository.findAllRewardsByProjectIdWithProjectReward(project_id);
-        //PackageRewards(id=95, rewardCount=1, projectPackage=ProjectPackage(id=94, packageName='이불세트', packagePrice=2, quantityLimited=0), projectReward=ProjectReward(id=92, rewardName='이불', optionType='select', optionList=[줄무늬, 물방울]), project=Project(id=1, title='project_title'))]
         Map<ProjectPackage, List<ProjectRewards>> packageRewardsMap = packageRewardList.stream().map(PackageRewards::getProjectPackage).filter(Objects::nonNull).distinct()
                 .collect(Collectors.toMap(projectPackage -> projectPackage,projectPackage -> packageRewardList.stream().filter(pr -> pr != null && pr.getProjectPackage() != null &&
                         pr.getProjectPackage().getId() != null &&pr.getProjectPackage().getId().equals(projectPackage.getId())).map(PackageRewards::getProjectReward).collect(Collectors.toList())));
-        //projectReward -> rewardDTO
         packageRewardsMap.forEach((projectPackage,projectReward) -> {
             List<RewardDTO> rewardDTOList = projectReward.stream()
                     .map(pr -> {
