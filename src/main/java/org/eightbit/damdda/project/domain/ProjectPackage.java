@@ -2,10 +2,12 @@ package org.eightbit.damdda.project.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
+import org.eightbit.damdda.order.domain.Order;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "project_packages")

@@ -27,6 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Project> findProjectsByMemberId(@Param("memberId") Long memberId);
 
 
+
 }
 
 //오류는 OrderRepository에서 findAllByUserId라는 메서드를 찾으려고 하지만, Order 엔티티에 userId라는 필드가 존재하지 않기 때문에 발생합니다.

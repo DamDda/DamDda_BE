@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class SupportingPackageDTO {
     private Long packageId;
     private String packageName;
-    private String paymentPrice;
+    private Integer paymentPrice;
     private Integer packageCount;
 }

@@ -9,6 +9,7 @@ import org.eightbit.damdda.order.domain.Payment;
 import org.eightbit.damdda.order.domain.SupportingPackage;
 import org.eightbit.damdda.order.domain.SupportingProject;
 
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -18,8 +19,11 @@ import java.util.Set;
 public class OrderDTO {
     private Delivery delivery;  // 연관된 Delivery 객체
     private Payment payment;  // 연관된 Payment 객체
+
+    /* 중요 */
+    /*supportingProject -> DTO로 바꾸기*/
     private SupportingProject supportingProject;  // 연관된 SupportingProject 객체
-    private Set<SupportingPackage> supportingPackages;  // 연관된 SupportingPackage 객체
+    private Set<SupportingPackageDTO> supportingPackages;  // 연관된 SupportingPackage 객체
 
 
     @Override

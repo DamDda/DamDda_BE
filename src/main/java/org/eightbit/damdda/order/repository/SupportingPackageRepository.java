@@ -24,13 +24,21 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     @Query("SELECT sp.packagePrice FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
     List<String> findPackagePricesByProjectId(@Param("projectId") Long projectId);
 
-    // 특정 프로젝트의 후원자 수를 계산하는 메서드 (중복 후원자를 제거)
-    @Query("SELECT COUNT(DISTINCT sp.user.id) FROM SupportingProject sp WHERE sp.project.id = :projectId")
-    Long getTotalSupporters(@Param("projectId") Long projectId);
 
     // project_id로 프로젝트의 end_date를 가져오는 쿼리
     @Query("SELECT DISTINCT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
     Timestamp findProjectEndDateByProjectId(@Param("projectId") Long projectId);
+
+
+
+
+
+
+
+    // 특정 프로젝트의 후원자 수를 계산하는 메서드 (중복 후원자를 제거)
+    @Query("SELECT COUNT(DISTINCT sp.user.id) FROM SupportingProject sp WHERE sp.project.id = :projectId")
+    Long getTotalSupporters(@Param("projectId") Long projectId);
+
 
     // 특정 프로젝트의 created_at 가져오는 쿼리
     @Query("SELECT p.createdAt FROM Project p WHERE p.id = :projectId")

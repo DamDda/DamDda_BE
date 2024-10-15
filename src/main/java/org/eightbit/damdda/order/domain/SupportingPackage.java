@@ -20,17 +20,20 @@ public class  SupportingPackage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long packageId;
 
-    @ManyToOne
-    @JoinColumn(name = "supporting_project_id")
-    private SupportingProject supportingProject;
+//    @ManyToOne
+//    @JoinColumn(name = "supporting_project_id")
+//    private SupportingProject supportingProject;
+//
+//    @ManyToMany(mappedBy = "supportingPackages")
+//    private Set<Order> orders = new HashSet<>(); // 역방향 다대다 관계
 
-    @ManyToMany(mappedBy = "supportingPackages")
-    private Set<Order> orders = new HashSet<>(); // 역방향 다대다 관계
+//    private String packageName;
+//    private Long packagePrice;
+//    private Long packageCount;
 
-    private String packageName;
-    private Long packagePrice;
-    private Long packageCount;
-
+    @OneToOne
+    @JoinColumn(name="id")
+    private ProjectPackage projectPackage;
 
 }
 

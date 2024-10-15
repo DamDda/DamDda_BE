@@ -1,0 +1,202 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.springframework.boot",
+    "module": "spring-boot-starter-validation",
+    "version": "2.6.15",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter",
+          "version": {
+            "requires": "2.6.15"
+          }
+        },
+        {
+          "group": "org.apache.tomcat.embed",
+          "module": "tomcat-embed-el",
+          "version": {
+            "requires": "9.0.75"
+          }
+        },
+        {
+          "group": "org.hibernate.validator",
+          "module": "hibernate-validator",
+          "version": {
+            "requires": "6.2.5.Final"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15.jar",
+          "url": "spring-boot-starter-validation-2.6.15.jar",
+          "size": 4770,
+          "sha512": "4b8a092a592f3d4f74cae6be7f226ba6b3ef9caa503c3366b042887c34352680cb34ffc26bfa38c1019da5729db6c2ca06e0e094a5a88b34bc332a7f4c841935",
+          "sha256": "ea4f5d5b67f6996ca9152014b0f65507411e14820e1cbd0356bec313ec550154",
+          "sha1": "7c0523dbb5fa0b305c710775ba3dc390c883681c",
+          "md5": "57d156e65d21fb0bc17bf8a0b41eb269"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter",
+          "version": {
+            "requires": "2.6.15"
+          }
+        },
+        {
+          "group": "org.apache.tomcat.embed",
+          "module": "tomcat-embed-el",
+          "version": {
+            "requires": "9.0.75"
+          }
+        },
+        {
+          "group": "org.hibernate.validator",
+          "module": "hibernate-validator",
+          "version": {
+            "requires": "6.2.5.Final"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15.jar",
+          "url": "spring-boot-starter-validation-2.6.15.jar",
+          "size": 4770,
+          "sha512": "4b8a092a592f3d4f74cae6be7f226ba6b3ef9caa503c3366b042887c34352680cb34ffc26bfa38c1019da5729db6c2ca06e0e094a5a88b34bc332a7f4c841935",
+          "sha256": "ea4f5d5b67f6996ca9152014b0f65507411e14820e1cbd0356bec313ec550154",
+          "sha1": "7c0523dbb5fa0b305c710775ba3dc390c883681c",
+          "md5": "57d156e65d21fb0bc17bf8a0b41eb269"
+        }
+      ]
+    },
+    {
+      "name": "mavenOptionalApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15.jar",
+          "url": "spring-boot-starter-validation-2.6.15.jar",
+          "size": 4770,
+          "sha512": "4b8a092a592f3d4f74cae6be7f226ba6b3ef9caa503c3366b042887c34352680cb34ffc26bfa38c1019da5729db6c2ca06e0e094a5a88b34bc332a7f4c841935",
+          "sha256": "ea4f5d5b67f6996ca9152014b0f65507411e14820e1cbd0356bec313ec550154",
+          "sha1": "7c0523dbb5fa0b305c710775ba3dc390c883681c",
+          "md5": "57d156e65d21fb0bc17bf8a0b41eb269"
+        }
+      ],
+      "capabilities": [
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-validation-maven-optional",
+          "version": "2.6.15"
+        }
+      ]
+    },
+    {
+      "name": "mavenOptionalRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15.jar",
+          "url": "spring-boot-starter-validation-2.6.15.jar",
+          "size": 4770,
+          "sha512": "4b8a092a592f3d4f74cae6be7f226ba6b3ef9caa503c3366b042887c34352680cb34ffc26bfa38c1019da5729db6c2ca06e0e094a5a88b34bc332a7f4c841935",
+          "sha256": "ea4f5d5b67f6996ca9152014b0f65507411e14820e1cbd0356bec313ec550154",
+          "sha1": "7c0523dbb5fa0b305c710775ba3dc390c883681c",
+          "md5": "57d156e65d21fb0bc17bf8a0b41eb269"
+        }
+      ],
+      "capabilities": [
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-validation-maven-optional",
+          "version": "2.6.15"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15-javadoc.jar",
+          "url": "spring-boot-starter-validation-2.6.15-javadoc.jar",
+          "size": 4749,
+          "sha512": "041ac2b75c2a4dfea1fdc580687ea18bdff573d978b90eac949de8c260f7ae6873b9e978f35fddb6e516ca56730583a6ec4018ba1702177cba18d5da931d6cce",
+          "sha256": "97714492419c9899e40702b3245d88327fa4bc1f2faaa2b8425b7e25c6902f0f",
+          "sha1": "c17bbd96b19f4c42dfcca15cb3f28814afe9bdc5",
+          "md5": "51320974b3f7e98ff773edea255d214a"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-starter-validation-2.6.15-sources.jar",
+          "url": "spring-boot-starter-validation-2.6.15-sources.jar",
+          "size": 4747,
+          "sha512": "09389473dd8ea50d4b7760ca3d4a9d99ee989f0a63b47f12d54b55c264f46961610e35b89e95be87e53cca7c3d8f2b83dac92aaf08cb5a5602732e76127c9e57",
+          "sha256": "d5017f1e64bf5cd001d6827d381f86dd86804ae2d9fc1d9e923e388452795835",
+          "sha1": "b2b6b860f18e090bac6e5337b38919310b28b567",
+          "md5": "10c6b973569ab0b6b3618ef0f0a6fc1c"
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.eightbit.damdda.project.domain.Project;
+import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -38,16 +39,21 @@ public class Order {
     private SupportingProject supportingProject;
 
     // SupportingPackage 정보와 연관된 필드
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "ordered_packages", // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "order_id"), // 현재 엔티티의 외래 키
-            inverseJoinColumns = @JoinColumn(name = "supporting_package_id") // 연관된 SupportingPackage의 외래 키
-    )
-    private Set<SupportingPackage> supportingPackages;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "ordered_packages", // 중간 테이블 이름
+//            joinColumns = @JoinColumn(name = "order_id"), // 현재 엔티티의 외래 키
+//            inverseJoinColumns = @JoinColumn(name = "supporting_package_id") // 연관된 SupportingPackage의 외래 키
+//    )
+//    private Set<SupportingPackage> supportingPackages;
+
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="ordered_packages",joinColumns = @JoinColumn(name="order_id"), inverseJoinColumns = @JoinColumn(name="package_id"))
+    private Set<ProjectPackage> projectPackages;
 
     private LocalDateTime createdAt;  // 주문 생성 시간
     private LocalDateTime updatedAt;  // 주문 수정 시간
+
 
 
 

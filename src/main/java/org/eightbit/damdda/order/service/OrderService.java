@@ -8,6 +8,7 @@ import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.dto.SupportingPackageDTO;
 import org.eightbit.damdda.project.domain.Project;
+import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.eightbit.damdda.order.domain.QSupportingPackage.supportingPackage;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -37,6 +40,7 @@ public class OrderService {
     private final org.eightbit.damdda.order.repository.SupportingPackageRepository supportingPackageRepository;
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
+    private final org.eightbit.damdda.project.repository.PackageRepository packageRepository;
 
 
 
@@ -51,10 +55,8 @@ public class OrderService {
 
         // 프로젝트 id를 받아서 저장한 후-> 해당 프로젝트와 연결****
         Long projectId = orderDTO.getSupportingProject().getProject().getId();  // Project 엔티티의 ID를 가져옴
-        System.out.println(projectId+"!");
         Project project=projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
-        System.out.println("order service project"+project);
 
         //userId로 user찾기****
         Long userId = orderDTO.getSupportingProject().getUser().getId();  // User(Member) 엔티티의 ID를 가져옴
@@ -76,19 +78,21 @@ public class OrderService {
 
 
         // 여러 개의 SupportingPackage를 처리할 수 있도록 Set을 사용
-        Set<SupportingPackage> supportingPackages = new HashSet<>();
+        Set<ProjectPackage> supportingPackages = new HashSet<>();
 
         // OrderDTO에서 여러 개의 SupportingPackage 가져오기
-        for (SupportingPackage suppportingPackage : orderDTO.getSupportingPackages()) {
-            SupportingPackage supportingPackage = SupportingPackage.builder()
-                    .packageName(suppportingPackage.getPackageName())
-                    .packagePrice(suppportingPackage.getPackagePrice())
-                    .packageCount(suppportingPackage.getPackageCount())
-                    .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
-                    .build();
-            System.out.println("log: order service supporting package"+supportingPackage);
-            supportingPackageRepository.save(supportingPackage);
-            supportingPackages.add(supportingPackage);  // Set에 추가
+        for (SupportingPackageDTO suppportingPackage : orderDTO.getSupportingPackages()) {
+//            SupportingPackage supportingPackage = SupportingPackage.builder()
+//                    .packageName(suppportingPackage.getPackageName())
+//                    .packagePrice(suppportingPackage.getPackagePrice())
+//                    .packageCount(suppportingPackage.getPackageCount())
+//                    .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
+//                    .build();
+//            System.out.println("log: order service supporting package"+supportingPackage);
+//            supportingPackageRepository.save(supportingPackage);
+//            supportingPackages.add(supportingPackage);  // Set에 추가
+            ProjectPackage projectPackage = packageRepository.findById(suppportingPackage.getPackageId()).orElseThrow(() -> new RuntimeException("패키지를 찾을 수 없습니다."));
+            supportingPackages.add(projectPackage);
         }
 
         // Order 엔티티 생성 및 저장
@@ -96,7 +100,7 @@ public class OrderService {
                 .delivery(delivery)
                 .payment(payment)
                 .supportingProject(supportingProject)
-                .supportingPackages(supportingPackages)
+                .projectPackages(supportingPackages)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -114,7 +118,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
+                        .supportingPackages(packageEntityToDto(order.getProjectPackages()))  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());  // List<OrderDTO>로 변환
     }
@@ -128,7 +132,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
+                    .supportingPackages(packageEntityToDto(order.getProjectPackages()))  // 선물 구성 정보
                     .build();
         });
     }
@@ -149,7 +153,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
+                        .supportingPackages(packageEntityToDto(order.getProjectPackages()))  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());
     }
@@ -229,7 +233,7 @@ public class OrderService {
                 .delivery(order.getDelivery())
                 .payment(order.getPayment())
                 .supportingProject(order.getSupportingProject())
-                .supportingPackages(order.getSupportingPackages())
+                .supportingPackages(packageEntityToDto(order.getProjectPackages()))
                 .build();
     }
 
@@ -242,7 +246,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
+                    .supportingPackages(packageEntityToDto(order.getProjectPackages()))  // 선물 구성 정보
                     .build();
         }).collect(Collectors.toList());
     }
@@ -311,7 +315,29 @@ public class OrderService {
 
     }
 
+//    public Set<ProjectPackage> packageDtoToEntity(Set<SupportingPackageDTO> supportingPackageDTOS){
+//        Set<ProjectPackage> projectPackages = supportingPackageDTOS.stream().map(dto ->{
+//            return ProjectPackage.builder().packageName(dto.getPackageName())
+//                    .packagePrice(dto.getPaymentPrice())
+//                    .
+//                    .collect(Collectors.toSet())
+//                    .build();
+//
+//        });
+//    }
 
+    public Set<SupportingPackageDTO> packageEntityToDto(Set<ProjectPackage> projectPackages){
+        Set<SupportingPackageDTO> supportingPackageDTOS = projectPackages.stream().map( pac-> {
+                    return SupportingPackageDTO.builder()
+                            .packageId(pac.getId())
+                            .packageName(pac.getPackageName())
+                            .packageCount(pac.getSalesQuantity())
+                            .paymentPrice(pac.getPackagePrice())
+                            .build();
+                }
+        ).collect(Collectors.toSet());
+        return supportingPackageDTOS;
+    }
 
 }
 

@@ -1,0 +1,178 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.springframework.security",
+    "module": "spring-security-config",
+    "version": "5.6.10",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.security",
+          "module": "spring-security-core",
+          "version": {
+            "requires": "5.6.10"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-aop",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-beans",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-context",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-core",
+          "version": {
+            "requires": "5.3.24"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-security-config-5.6.10.jar",
+          "url": "spring-security-config-5.6.10.jar",
+          "size": 1373702,
+          "sha512": "9359ef1906c4d3c9d3df8db80ec00e2b5ba5c35be9247b7f22cf706fa4d9ff4725839190b1bb192fc252bd59c8a6bfe00294e05d02aab01bf02c2faaecf36114",
+          "sha256": "dd107388315b4269b8d10465d0754ad1be9568d6223a5e8d8767282dc2ca7c74",
+          "sha1": "6f142d9cdabda19c8e5e30288123fdbf8c851f8f",
+          "md5": "2c39890350113e42769ce8ece720cac4"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.security",
+          "module": "spring-security-core",
+          "version": {
+            "requires": "5.6.10"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-aop",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-beans",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-context",
+          "version": {
+            "requires": "5.3.24"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-core",
+          "version": {
+            "requires": "5.3.24"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-security-config-5.6.10.jar",
+          "url": "spring-security-config-5.6.10.jar",
+          "size": 1373702,
+          "sha512": "9359ef1906c4d3c9d3df8db80ec00e2b5ba5c35be9247b7f22cf706fa4d9ff4725839190b1bb192fc252bd59c8a6bfe00294e05d02aab01bf02c2faaecf36114",
+          "sha256": "dd107388315b4269b8d10465d0754ad1be9568d6223a5e8d8767282dc2ca7c74",
+          "sha1": "6f142d9cdabda19c8e5e30288123fdbf8c851f8f",
+          "md5": "2c39890350113e42769ce8ece720cac4"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-security-config-5.6.10-javadoc.jar",
+          "url": "spring-security-config-5.6.10-javadoc.jar",
+          "size": 1287298,
+          "sha512": "dc870c8f01ce273e9a92839dc4793363284414a9292792cdf3f3f9ee4a6fbac2eeabf7b71b00dd7e4cc38655962e21f6604e6bf4d760c27b113c37b12623d1a9",
+          "sha256": "6e61ae3253f6c29c0cb19e8764d341c303f2031de56005e71054f9672881e09c",
+          "sha1": "5e47eaea58effbe555526a0d3715ae7f65aca040",
+          "md5": "0210522ac9637745c69a306e8ee63f80"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-security-config-5.6.10-sources.jar",
+          "url": "spring-security-config-5.6.10-sources.jar",
+          "size": 946189,
+          "sha512": "a7ea219449053434c3e2173e3f46cb40063215386d411c0efb71c84711e2418bcfbc47170e72b2eb26106099516bcc93a99ff15c56f06fed7f05722ac5dadfc0",
+          "sha256": "21dc018a725837fa94328d5d71a870f3a90ce559a322a53f7b302c0c6455d47b",
+          "sha1": "3e4e370484cf8f71216d41e06cc3b6fa270d4247",
+          "md5": "ab4f4e76ca47f82628e4524cf9c4adaa"
+        }
+      ]
+    }
+  ]
+}

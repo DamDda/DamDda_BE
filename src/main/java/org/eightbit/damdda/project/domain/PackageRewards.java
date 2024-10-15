@@ -1,8 +1,10 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
+import org.eightbit.damdda.order.domain.Order;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "package_rewards_options")
@@ -31,6 +33,8 @@ public class PackageRewards {
 
     private int rewardCount; //선물 갯수
 
+    @ManyToMany(mappedBy="projectPackages")
+    private Set<Order> order;
 
     public void setProject(Project project){this.project = project;}
 
