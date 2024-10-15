@@ -47,6 +47,7 @@ public class MemberDTO {
     // 빌더 수정
     public Member toEntity() {
         return Member.builder()
+                .id(id)
                 .loginId(loginId)
                 .password(password)
                 .nickname(nickname)

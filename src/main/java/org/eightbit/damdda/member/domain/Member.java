@@ -23,7 +23,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, updatable = false)
+    @Column(unique = true)
     private String loginId;
 
     private String password;
@@ -31,7 +31,6 @@ public class Member {
     @Column(unique = true)
     private String nickname;
 
-    @Column(updatable = false)
     private String name;
 
     private String email;

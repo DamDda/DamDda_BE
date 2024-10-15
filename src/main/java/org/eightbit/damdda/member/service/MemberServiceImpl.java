@@ -117,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setLoginId(null);
         memberDTO.setPassword(null);
         memberDTO.setName(null);
-        memberDTO.setNickname("(unknown)");
+        memberDTO.setNickname(null);
         memberDTO.setEmail(null);
         memberDTO.setPhoneNumber(null);
         memberDTO.setAddress(null);
@@ -126,7 +126,9 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setImageUrl(null);
         memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
 
-        this.memberRepository.save(memberDTO.toEntity());
+        Member member = memberDTO.toEntity();
+        System.out.println(member);
+        this.memberRepository.save(member);
     }
 
     @Transactional
