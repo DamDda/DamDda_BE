@@ -17,6 +17,10 @@ public interface MemberService {
     MemberDTO getMember(String loginId);
     MemberDTO updateMember(MemberDTO memberDTO);
     MemberDTO confirmPw(String loginId, String password);
+<<<<<<< HEAD
     Boolean deleteMember(Long id);
     String confirmPwd(String loginId, String password);
 }
+=======
+}
+>>>>>>> origin/fix/feature-area

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.admin.domain.AdminApproval;
 import org.eightbit.damdda.admin.service.AdminApprovalService;
-import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
@@ -15,16 +14,12 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final LikedProjectRepository likedProjectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectDocumentRepository projectDocumentRepository;
+    private final SupportingProjectService supportingProjectService;
 
     @Override
     public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
@@ -314,7 +310,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(project.getDescription())
                 .fundsReceive(project.getFundsReceive())
                 .targetFunding(project.getTargetFunding())
-                .category(project.getCategory().getName())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
                 .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
@@ -379,8 +375,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .descriptionDetail(project.getDescriptionDetail())
                     .fundsReceive(project.getFundsReceive())
                     .targetFunding(project.getTargetFunding())
-                    .category(project.getCategory().getName())
-                    .nickName(project.getMember().getNickname())
+                    .category(project.getCategory() == null ? null : project.getCategory().getName())
+                    .nickName(project.getMember() == null ? null : project.getMember().getNickname())
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
                     .supporterCnt(project.getSupporterCnt())
@@ -412,22 +408,11 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (delImg) {
 
-            try {
-                // DateEntity 클래스에서 deletedAt 필드를 가져옴
-                Field deletedAtField = DateEntity.class.getDeclaredField("deletedAt");
-                deletedAtField.setAccessible(true);  // private 필드에 접근 가능하도록 설정
+            project.setDeletedAt(Timestamp.from(Instant.now()));
 
-                // 현재 시간으로 deletedAt 필드 설정
-                deletedAtField.set(project, Timestamp.from(Instant.now()));
-
-                // 변경 사항 저장
-                projectRepository.save(project);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();  // 예외 처리
-            }
-
-            // 변경 사항을 저장하여 소프트 삭제 수행
+            // 변경 사항 저장
             projectRepository.save(project);
+
         }
     }
 
@@ -627,6 +612,10 @@ public class ProjectServiceImpl implements ProjectService {
         project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
 
 
+        if (submit) adminApprovalService.submitProject(project);
+
+
+
         return project.getId();
     }
 
@@ -638,5 +627,8 @@ public class ProjectServiceImpl implements ProjectService {
         return result.orElseThrow();
     }
 
-
+    @Override
+    public List<?> getDailySupportingByProjectId(Long projectId) {
+       return supportingProjectService.getDailySupportingByProjectId(projectId);
+    }
 }

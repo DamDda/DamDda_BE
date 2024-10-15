@@ -1,14 +1,22 @@
 package org.eightbit.damdda.member.controller;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 
+<<<<<<< HEAD
 import org.eightbit.damdda.member.domain.AccountCredentials;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.*;
 import org.eightbit.damdda.member.service.*;
+=======
+import org.eightbit.damdda.member.dto.MemberSearchDTO;
+import org.eightbit.damdda.member.dto.PasswordDTO;
+import org.eightbit.damdda.security.user.AccountCredentials;
+import org.eightbit.damdda.security.jwt.JwtService;
+import org.eightbit.damdda.security.user.User;
+import org.eightbit.damdda.member.dto.MemberDTO;
+import org.eightbit.damdda.member.dto.RegisterDTO;
+>>>>>>> origin/fix/feature-area
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +24,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.member.dto.LoginDTO;
-import org.eightbit.damdda.member.dto.MemberDTO;
-import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.service.LoginService;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.member.service.RegisterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import java.io.IOException;
-import java.util.UUID;
 
 
 @Log4j2
@@ -63,13 +62,14 @@ public class MemberController {
         return ResponseEntity.ok().body(userInfo);
     }
 
-    @PostMapping("/profile")
-    public String insertMember (@RequestBody RegisterDTO registerDTO){
+    @PostMapping
+    public ResponseEntity<String> insertMember (@RequestBody RegisterDTO registerDTO){
+
         try {
             registerService.insertMember(registerDTO);
-            return "success";
+            return ResponseEntity.ok("success");
         } catch (IllegalArgumentException e){
-            return "error";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -120,14 +120,13 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
+
         return ResponseEntity.ok("logout");
     }
 
-
-    @GetMapping("/profile")
-    public ResponseEntity<MemberDTO> getProfile (@AuthenticationPrincipal User user){
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
         try {
-            String loginId = user.getLoginId();
             return ResponseEntity.ok(memberService.getMember(loginId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -145,16 +144,25 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/confirmpw")
+    public ResponseEntity<?> confirmPassword (@RequestParam String password){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String loginId = user.getMember().getLoginId();
+            System.out.println(loginId + " " + password);
+            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
 
-//    @PutMapping("/profile")
-//    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
-//        try {
-//            return ResponseEntity.ok(memberService.updateMember(memberDTO));
-//        } catch (IllegalArgumentException e) {
-//            return null;
-//        }
-//    }
+            if(memberDTO != null){
+                return ResponseEntity.ok(memberDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+        }
+    }
 
+<<<<<<< HEAD
     @GetMapping("/confirmpw")
     public ResponseEntity<?> confirmPassword (@RequestParam String password){
         try {
@@ -248,6 +256,9 @@ public class MemberController {
 //    }
 
     @PutMapping("/profile/Photo")
+=======
+    @PutMapping("/{id}/Photo")
+>>>>>>> origin/fix/feature-area
     public ResponseEntity<String> updateProfilePhoto (@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
             String fileName = memberService.uploadFile(imageUrl);
@@ -257,6 +268,7 @@ public class MemberController {
         }
     }
 
+<<<<<<< HEAD
 //
 //            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
 //
@@ -272,4 +284,47 @@ public class MemberController {
 
 
 }
+=======
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+        try {
+            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+>>>>>>> origin/fix/feature-area
 
+    @GetMapping("/check")
+    public ResponseEntity<Map<String, Long>> checkMemberDetails(MemberSearchDTO memberSearchDTO){
+        try {
+            return ResponseEntity.ok(Map.of("id", loginService.checkMemberDetails(memberSearchDTO)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Map<String, Boolean>> modifyPassword(
+            @PathVariable Long id,
+            @RequestBody PasswordDTO passwordDTO
+    ){
+        try {
+            boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
+            return ResponseEntity.ok(Map.of("isSuccess", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+}

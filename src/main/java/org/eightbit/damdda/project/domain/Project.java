@@ -1,15 +1,15 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "projects")
@@ -19,7 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"category", "tags"})
-public class Project extends DateEntity {
+@EntityListeners(value={AuditingEntityListener.class})
+public class Project {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     private Member member;
@@ -28,6 +32,7 @@ public class Project extends DateEntity {
     private Category category;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "project_tag",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -37,6 +42,9 @@ public class Project extends DateEntity {
 
     private String title;
     private String description;
+
+//    @Column(length = 10000000)
+    @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
     private Timestamp startDate;
     private Timestamp endDate;
@@ -51,6 +59,12 @@ public class Project extends DateEntity {
     private Long likeCnt;
     private String thumbnailUrl;
     private Timestamp submitAt;
+    @CreatedDate
+    @Column(updatable = false)
+    private Timestamp createdAt;
+
+    private Timestamp deletedAt;
+
 
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval=true)
 //    private List<PackageRewards> packageRewards;

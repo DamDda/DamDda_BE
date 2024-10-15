@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="1badf8a7-30ae-4441-baf5-e44702969a3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/PackageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/PackageServiceImpl.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/admin/service/AdminApprovalServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/admin/service/AdminApprovalServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/client/AIContentGenerationClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/client/AIContentGenerationClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/controller/GenerativeAIController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/controller/GenerativeAIController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/dto/AIProjectDescriptionDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/dto/AIProjectDescriptionDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/service/GenerativeAIServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/service/GenerativeAIServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/config/SecurityConfig.java" beforeDir="false" />
+>>>>>>> origin/fix/feature-area
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,19 +103,31 @@
   "keyToString": {
     "Gradle.Build DamDda_BE.executor": "Run",
     "Gradle.DamDda_BE [clean].executor": "Run",
+<<<<<<< HEAD
     "Gradle.DamDda_BE [compileJava].executor": "Run",
+=======
+>>>>>>> origin/fix/feature-area
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "Spring Boot.DamDdaApplication.executor": "Run",
+<<<<<<< HEAD
     "git-widget-placeholder": "feature/project",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/비트캠프/Downloads/DamDda_BE-feature-project (2)/DamDda_BE-feature-project",
+=======
+    "git-widget-placeholder": "fix/feature-area",
+    "kotlin-language-version-configured": "true",
+>>>>>>> origin/fix/feature-area
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+<<<<<<< HEAD
+=======
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+>>>>>>> origin/fix/feature-area
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -126,6 +147,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.DamDdaApplication">
+    <configuration name="DamDda_BE [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="DamDda_BE [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -193,16 +236,22 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.DamDda_BE [compileJava]" />
         <item itemvalue="Gradle.DamDda_BE [clean]" />
+        <item itemvalue="Gradle.DamDda_BE [build]" />
+        <item itemvalue="Gradle.DamDda_BE [compileJava]" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+<<<<<<< HEAD
         <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
         <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
+=======
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+>>>>>>> origin/fix/feature-area
       </set>
     </attachedChunks>
   </component>
@@ -231,9 +280,15 @@
       <workItem from="1728544118386" duration="357000" />
       <workItem from="1728564216950" duration="1328000" />
       <workItem from="1728604757887" duration="5213000" />
+<<<<<<< HEAD
       <workItem from="1728712675824" duration="2031000" />
       <workItem from="1728876293904" duration="1883000" />
       <workItem from="1728879312355" duration="1456000" />
+=======
+      <workItem from="1728629568335" duration="6606000" />
+      <workItem from="1728905455895" duration="5335000" />
+      <workItem from="1728950970815" duration="12018000" />
+>>>>>>> origin/fix/feature-area
     </task>
     <servers />
   </component>

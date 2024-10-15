@@ -6,6 +6,7 @@ import org.eightbit.damdda.order.domain.*;
 
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
+import org.eightbit.damdda.order.dto.SupportingPackageDTO;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,25 +71,32 @@ public class OrderService {
                 .payment(payment)
                 .delivery(delivery)
                 .build();
+        System.out.println("log: order service supporting project"+supportingProject);
         supportingProjectRepository.save(supportingProject);
 
-//        SupportingPackage supportingPackage = supportingPackageRepository.save(orderDTO.getSupportingPackage());
-        SupportingPackage supportingPackage =SupportingPackage.builder()
-                .packageName(orderDTO.getSupportingPackage().getPackageName())
-                .packagePrice(orderDTO.getSupportingPackage().getPackagePrice())
-                .packageCount(orderDTO.getSupportingPackage().getPackageCount())
-                .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정**
-                .build();
-        System.out.println(supportingPackage+"그래야이거야!");
-        supportingPackageRepository.save(supportingPackage);
 
+        // 여러 개의 SupportingPackage를 처리할 수 있도록 Set을 사용
+        Set<SupportingPackage> supportingPackages = new HashSet<>();
+
+        // OrderDTO에서 여러 개의 SupportingPackage 가져오기
+        for (SupportingPackage suppportingPackage : orderDTO.getSupportingPackages()) {
+            SupportingPackage supportingPackage = SupportingPackage.builder()
+                    .packageName(suppportingPackage.getPackageName())
+                    .packagePrice(suppportingPackage.getPackagePrice())
+                    .packageCount(suppportingPackage.getPackageCount())
+                    .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
+                    .build();
+            System.out.println("log: order service supporting package"+supportingPackage);
+            supportingPackageRepository.save(supportingPackage);
+            supportingPackages.add(supportingPackage);  // Set에 추가
+        }
 
         // Order 엔티티 생성 및 저장
         Order order = Order.builder()
                 .delivery(delivery)
                 .payment(payment)
                 .supportingProject(supportingProject)
-                .supportingPackage(supportingPackage)
+                .supportingPackages(supportingPackages)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -104,7 +114,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());  // List<OrderDTO>로 변환
     }
@@ -118,7 +128,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                     .build();
         });
     }
@@ -139,7 +149,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());
     }
@@ -219,7 +229,7 @@ public class OrderService {
                 .delivery(order.getDelivery())
                 .payment(order.getPayment())
                 .supportingProject(order.getSupportingProject())
-                .supportingPackage(order.getSupportingPackage())
+                .supportingPackages(order.getSupportingPackages())
                 .build();
     }
 
@@ -232,7 +242,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                     .build();
         }).collect(Collectors.toList());
     }
@@ -272,31 +282,31 @@ public class OrderService {
         LocalDate today = LocalDate.now();
 
         // 프로젝트 종료일을 SupportingPackage에서 가져옴
-                Timestamp endDateTimestamp = supportingPackageRepository.findProjectEndDateByProjectId(projectId);
-                    System.out.println(endDateTimestamp+"0000000");
+        Timestamp endDateTimestamp = supportingPackageRepository.findProjectEndDateByProjectId(projectId);
+        System.out.println(endDateTimestamp+"0000000");
         // Timestamp를 LocalDateTime으로 변환 후 LocalDate로 변환
-                LocalDateTime endDateTime = endDateTimestamp.toLocalDateTime();
-                LocalDate endDate = endDateTime.toLocalDate();
+        LocalDateTime endDateTime = endDateTimestamp.toLocalDateTime();
+        LocalDate endDate = endDateTime.toLocalDate();
 
         // 종료일과 오늘 날짜 사이의 남은 일수 계산
-                long remainingDays = ChronoUnit.DAYS.between(today, endDate);
+        long remainingDays = ChronoUnit.DAYS.between(today, endDate);
 
         // 4. created_at 가져오기
-                Timestamp createdAtTimestamp = supportingPackageRepository.getCreatedAtByProjectId(projectId);
-                LocalDateTime createdAtTime = createdAtTimestamp.toLocalDateTime();
-                LocalDate createdAt = createdAtTime.toLocalDate();
+        Timestamp createdAtTimestamp = supportingPackageRepository.getCreatedAtByProjectId(projectId);
+        LocalDateTime createdAtTime = createdAtTimestamp.toLocalDateTime();
+        LocalDate createdAt = createdAtTime.toLocalDate();
         // 5. target Funding
-             Long targetFunding=supportingPackageRepository.getTargetFundingByProjectId(projectId);
+        Long targetFunding=supportingPackageRepository.getTargetFundingByProjectId(projectId);
         System.out.println(targetFunding+"!!");
         // 5. DTO로 통계 정보를 반환
-                return ProjectStatisticsDTO.builder()
-                        .startDate(createdAtTimestamp) // created_at 값을 Timestamp로 사용
-                        .endDate(endDateTimestamp)     // endDate 값을 Timestamp로 사용
-                        .totalSupportAmount(totalAmount != null ? totalAmount : 0)
-                        .totalSupporters(totalSupporters != null ? totalSupporters : 0)
-                        .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0
-                        .targetFunding(targetFunding)
-                        .build();
+        return ProjectStatisticsDTO.builder()
+                .startDate(createdAtTimestamp) // created_at 값을 Timestamp로 사용
+                .endDate(endDateTimestamp)     // endDate 값을 Timestamp로 사용
+                .totalSupportAmount(totalAmount != null ? totalAmount : 0)
+                .totalSupporters(totalSupporters != null ? totalSupporters : 0)
+                .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0
+                .targetFunding(targetFunding)
+                .build();
 
 
     }

@@ -20,6 +20,10 @@ public class MemberDTO {
     private String address;
     private String detailedAddress;
     private int postCode;
+<<<<<<< HEAD
+=======
+    //    private MultipartFile imageUrl;
+>>>>>>> origin/fix/feature-area
     private String imageUrl;
 
     public static MemberDTO of(Member member) {

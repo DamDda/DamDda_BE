@@ -17,6 +17,10 @@ import java.sql.Timestamp;
 @Builder
 @EntityListeners(value={AuditingEntityListener.class})
 public class Member {
+<<<<<<< HEAD
+=======
+    @Setter
+>>>>>>> origin/fix/feature-area
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +54,7 @@ public class Member {
     @CreatedDate
     @Column(updatable = false)
     private Timestamp createdAt;
+<<<<<<< HEAD
 
     private Timestamp deletedAt;
 
@@ -57,3 +62,9 @@ public class Member {
 }
 
 
+=======
+
+    private Timestamp deletedAt;
+
+}
+>>>>>>> origin/fix/feature-area

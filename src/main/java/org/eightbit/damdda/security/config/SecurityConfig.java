@@ -1,10 +1,10 @@
-package org.eightbit.damdda.member.config;
+package org.eightbit.damdda.security.config;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.member.except.AuthEntryPoint;
-import org.eightbit.damdda.member.filter.JwtAuthenticationFilter;
-import org.eightbit.damdda.member.filter.LoginFilter;
-import org.eightbit.damdda.member.service.JwtService;
+import org.eightbit.damdda.security.jwt.AuthEntryPoint;
+import org.eightbit.damdda.security.jwt.JwtService;
+import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
+import org.eightbit.damdda.security.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -52,11 +52,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
+<<<<<<< HEAD:src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java
                 .antMatchers(HttpMethod.GET, "/member/findid", "/member/profile", "/member/check", "/member/check/nickname", "/member/check/id","/files/projects/**","/packages/project/{projectId}", "/api/projects/projects","/api/projects/{projectId}").permitAll()
                 .antMatchers(HttpMethod.POST, "/member","/member/confirmpw","/member/profile", "/member/login").permitAll()
+=======
+                .antMatchers(HttpMethod.GET,
+                        "/member/findid",
+                        "/member/profile",
+                        "/member/check",
+                        "/member/check/**",
+                        "/packages/project/{projectId}",
+                        "/files/projects/**",
+                        "/api/projects/projects",
+                        "/api/projects/{projectId}"
+                ).permitAll()
+
+                .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
+>>>>>>> origin/fix/feature-area:src/main/java/org/eightbit/damdda/security/config/SecurityConfig.java
                 .anyRequest().authenticated().and()
                 .logout()
-                .logoutUrl("/member/logout")
+//                .logoutUrl("/member/logout")
 //                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()

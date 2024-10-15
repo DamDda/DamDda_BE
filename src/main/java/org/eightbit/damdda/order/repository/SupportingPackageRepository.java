@@ -1,6 +1,7 @@
 package org.eightbit.damdda.order.repository;
 
 import org.eightbit.damdda.order.domain.SupportingPackage;
+import org.eightbit.damdda.project.dto.DailySupporting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,14 +29,19 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     Long getTotalSupporters(@Param("projectId") Long projectId);
 
     // project_id로 프로젝트의 end_date를 가져오는 쿼리
-    @Query("SELECT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
+    @Query("SELECT DISTINCT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
     Timestamp findProjectEndDateByProjectId(@Param("projectId") Long projectId);
 
     // 특정 프로젝트의 created_at 가져오는 쿼리
     @Query("SELECT p.createdAt FROM Project p WHERE p.id = :projectId")
     Timestamp getCreatedAtByProjectId(@Param("projectId") Long projectId);
 
+
+
     //목표금액 가져오는 쿼리
     @Query("SELECT p.targetFunding FROM Project p WHERE p.id = :projectId")
     Long getTargetFundingByProjectId(@Param("projectId") Long projectId);
+
+
+
 }
