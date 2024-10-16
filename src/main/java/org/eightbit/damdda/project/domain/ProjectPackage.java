@@ -6,6 +6,7 @@ import org.eightbit.damdda.order.domain.Order;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,13 +29,19 @@ public class ProjectPackage {
     @OneToMany(mappedBy = "projectPackage", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PackageRewards> packageRewards = new ArrayList<>();//초기화 안 하면 add 불가능
 
+    @ManyToMany(mappedBy = "projectPackages")
+    private Set<Order> orders = new HashSet<>();
+
     private String packageName;
 
     private int packagePrice;
 
-    private int quantityLimited;
+    private int quantityLimited; //제한 수량.
 
-    private int salesQuantity;
+    private int salesQuantity; //판매 갯수
+
+    private int totalSalesAmount; //총 후원 금액
+
 
     public void change(String name, int price, int quantityLimited) {
         this.packageName = name;

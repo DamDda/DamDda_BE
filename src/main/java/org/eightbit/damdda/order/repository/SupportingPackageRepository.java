@@ -19,19 +19,19 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     //후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져오는 로직
     //특정 프로젝트의 총 후원 금액을 계산하는 메서드
 
-    /* supporting 패키지에서  supporting_project_id가 projectid와 일치하는 걸 같고 packageprice를 모두 더함
-     **/
-    @Query("SELECT sp.packagePrice FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
-    List<String> findPackagePricesByProjectId(@Param("projectId") Long projectId);
+//    /* supporting 패키지에서  supporting_project_id가 projectid와 일치하는 걸 같고 packageprice를 모두 더함
+//     **/
+//    @Query("SELECT sp.packagePrice FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
+//    List<String> findPackagePricesByProjectId(@Param("projectId") Long projectId);
 
 
     // project_id로 프로젝트의 end_date를 가져오는 쿼리
-    @Query("SELECT DISTINCT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
+//    @Query("SELECT DISTINCT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
+//    Timestamp findProjectEndDateByProjectId(@Param("projectId") Long projectId);
+
+//
+    @Query("Select distinct project.endDate from Project project where project.id =: projectId")
     Timestamp findProjectEndDateByProjectId(@Param("projectId") Long projectId);
-
-
-
-
 
 
 

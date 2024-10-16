@@ -13,5 +13,4 @@ import java.util.List;
 @Repository
 public interface PackageRepository extends JpaRepository<ProjectPackage,Long> {
 
-
 }

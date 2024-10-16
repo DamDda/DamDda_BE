@@ -41,6 +41,8 @@ public class OrderService {
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
     private final org.eightbit.damdda.project.repository.PackageRepository packageRepository;
+    private final org.eightbit.damdda.project.repository.PackageRewardsRepository packageRewardsRepository;
+
 
 
 
@@ -269,7 +271,7 @@ public class OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
         //2. 총 후원 금액가져오기->
-        List<String> packagePrices=supportingPackageRepository.findPackagePricesByProjectId(projectId);
+        List<String> packagePrices=packageRewardsRepository.findPackagePricesByProjectId(projectId);
 
         // String을 Integer로 변환한 후, 합계를 계산
         Long totalAmount = packagePrices.stream()
