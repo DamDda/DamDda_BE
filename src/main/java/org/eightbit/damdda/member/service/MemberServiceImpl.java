@@ -34,7 +34,6 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final RegisterRepository registerRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     // = new BCryptPasswordEncorder() 추가
 
