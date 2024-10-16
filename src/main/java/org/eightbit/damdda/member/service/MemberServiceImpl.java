@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Map<String, Object> getUserInfo(Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow();
-        Map userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id",member.getLoginId());
         userInfo.put("key",member.getId());
         userInfo.put("imageUrl",member.getImageUrl());
@@ -86,11 +86,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getMember(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) {
-            return MemberDTO.of(member.get());
-        }else {
-            return null;
-        }
+        return member.map(MemberDTO::of).orElse(null);
     }
 
     @Override
@@ -127,7 +123,6 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
 
         Member member = memberDTO.toEntity();
-        System.out.println(member);
         this.memberRepository.save(member);
     }
 
