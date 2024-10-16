@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @SessionAttributes("supportingPackage")
 
-@RequestMapping("/dammdda/order")
+@RequestMapping("/damdda/order")
 ///http://localhost:9000/projects/myproject/order/create
 public class OrderController {
 
@@ -31,11 +31,11 @@ public class OrderController {
     //주문 생성
 //    @CrossOrigin(origins = "http://localhost:3000") // 특정 도메인에서만 허용
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
         orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
         //데이터 잘 넘어오는지 확인
         System.out.println(orderDTO.toString());
-        Order createdOrder = orderService.createOrder(orderDTO);
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 

@@ -47,9 +47,13 @@ public class Order {
 //    )
 //    private Set<SupportingPackage> supportingPackages;
 
-    @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="ordered_packages",joinColumns = @JoinColumn(name="order_id"), inverseJoinColumns = @JoinColumn(name="package_id"))
-    private Set<ProjectPackage> projectPackages;
+//    @ManyToMany(cascade=CascadeType.ALL)
+//    @JoinTable(name="ordered_packages",joinColumns = @JoinColumn(name="order_id"), inverseJoinColumns = @JoinColumn(name="package_id"))
+//    private Set<ProjectPackage> projectPackages;
+
+    @OneToMany
+    @JoinColumn(name="supporting_package_id")
+    private Set<SupportingPackage> supportingPackage;
 
     private LocalDateTime createdAt;  // 주문 생성 시간
     private LocalDateTime updatedAt;  // 주문 수정 시간

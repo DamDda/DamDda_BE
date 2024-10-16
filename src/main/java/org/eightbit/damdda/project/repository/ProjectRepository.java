@@ -4,6 +4,7 @@ import org.eightbit.damdda.project.domain.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,6 +17,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
 
 //    @Query("select p from Project p where p.member.id = :memberId" )
 //    Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
+
+    @Modifying
+    @Query("update Project p set p.fundsReceive = p.fundsReceive + :fundsReceive ,p.supporterCnt = p.supporterCnt+1 WHERE  p.id=:projectId")
+    void updateProjectStatus(@Param("fundsReceive") Long fundsReceive, @Param("projectId") Long projectId);
 
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null and p.submitAt is NOT null")
     Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);

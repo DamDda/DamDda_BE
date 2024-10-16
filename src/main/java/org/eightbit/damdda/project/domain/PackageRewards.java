@@ -33,8 +33,8 @@ public class PackageRewards {
 
     private int rewardCount; //선물 갯수
 
-    @ManyToMany(mappedBy="projectPackages")
-    private Set<Order> order;
+//    @ManyToMany(mappedBy="projectPackages")
+//    private Set<Order> order;
 
     public void setProject(Project project){this.project = project;}
 

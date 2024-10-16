@@ -1,6 +1,7 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.order.dto.KakaoApproveResponse;
 import org.eightbit.damdda.order.dto.KakaoReadyResponse;
 import org.eightbit.damdda.order.dto.TossResponse;
@@ -15,9 +16,9 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/damdda/payment")
+@RequestMapping("/payment")
 @RequiredArgsConstructor
-
+@Log4j2
 
 public class PaymentController {
 
@@ -120,6 +121,7 @@ public ResponseEntity<TossResponse> tossSuccess(
         System.out.println("x-damdda-authorization"+"//////");
         System.out.println(orderId+"************");
         KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,"x-damdda-authorization");
+        log.info("제발 이거 되면 카카오만 쓸게 "+kakaoReadyResponse);
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 
@@ -147,8 +149,10 @@ public ResponseEntity<TossResponse> tossSuccess(
             @PathVariable("order_id") Long orderId,  // PathVariable로 order_id 받음
             @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader, HttpServletResponse response) {
 
-
-
+        log.info("박명수");
+        if (authorizationHeader != null) {
+            System.out.println("여기 있다~");
+        }
         System.out.println("결제 성공. Order ID: " + orderId + ", PG Token: " + pgToken);
         System.out.println(authorizationHeader+"//////");
 

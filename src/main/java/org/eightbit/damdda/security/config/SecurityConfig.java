@@ -53,11 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
                 .antMatchers(HttpMethod.GET,
+                        "/payment/**",
                         "/member/findid",
                         "/member/profile",
                         "/member/check",
                         "/member/check/**",
-                        "/packages/project/{projectId}",
+                        "/package/{projectId}",
                         "/files/projects/**",
                         "/api/projects/projects",
                         "/api/projects/{projectId}"

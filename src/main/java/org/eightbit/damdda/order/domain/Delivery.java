@@ -17,7 +17,7 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
 
-    private String deliveryName;
+    private String deliveryName; //뭐가 들어가야 하지??
     private String deliveryPhoneNumber;
     private String deliveryEmail;
     private String deliveryAddress;

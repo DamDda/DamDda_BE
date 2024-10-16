@@ -10,4 +10,5 @@ public interface ProjectRepositoryCustom {
     Page<Project> findProjects(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable);
     Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable);
 
+
 }

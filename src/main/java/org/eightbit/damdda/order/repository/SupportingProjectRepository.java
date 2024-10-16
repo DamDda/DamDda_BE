@@ -19,7 +19,7 @@ public interface SupportingProjectRepository extends JpaRepository<SupportingPro
 
     // 태욱
     // 일별 후원액 가져오는 쿼리
-    @Query("SELECT pr.supportedAt, SUM(pa.packagePrice) "+
+    @Query("SELECT pr.supportedAt, SUM(pa.projectPackage.packagePrice) "+
             "FROM SupportingProject pr INNER JOIN SupportingPackage pa " +
             "ON pr.supportingProjectId = pa.supportingProject.supportingProjectId " +
             "WHERE pr.project.id = :projectId GROUP BY pr.supportedAt")

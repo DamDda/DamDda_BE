@@ -17,6 +17,7 @@ import java.util.Set;
 @Data
 @Builder
 public class OrderDTO {
+    private Long orderId;
     private Delivery delivery;  // 연관된 Delivery 객체
     private Payment payment;  // 연관된 Payment 객체
 

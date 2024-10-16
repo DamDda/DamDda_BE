@@ -29,8 +29,8 @@ public class ProjectPackage {
     @OneToMany(mappedBy = "projectPackage", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PackageRewards> packageRewards = new ArrayList<>();//초기화 안 하면 add 불가능
 
-    @ManyToMany(mappedBy = "projectPackages")
-    private Set<Order> orders = new HashSet<>();
+//    @ManyToMany(mappedBy = "projectPackages")
+//    private Set<Order> orders = new HashSet<>();
 
     private String packageName;
 
@@ -40,7 +40,7 @@ public class ProjectPackage {
 
     private int salesQuantity; //판매 갯수
 
-    private int totalSalesAmount; //총 후원 금액
+//    private int totalSalesAmount; //총 후원 금액
 
 
     public void change(String name, int price, int quantityLimited) {

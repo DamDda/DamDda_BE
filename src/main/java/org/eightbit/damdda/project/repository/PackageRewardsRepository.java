@@ -34,22 +34,11 @@ public interface PackageRewardsRepository extends JpaRepository<PackageRewards,L
     List<PackageRewards> findPackageRewardByRewardId(@Param("rewardId") Long rewardId);
 
 
-
-    /* supporting 패키지에서  supporting_project_id가 projectid와 일치하는 걸 같고 packageprice를 모두 더함
-     **/
-    //projectPackage가 재활용이 될 수 있나??
-    @Query("SELECT pr.projectPackage.totalSalesAmount FROM PackageRewards pr WHERE pr.project.id =: projectId")
-    List<String> findPackagePricesByProjectId(@Param("projectId") Long projectId);
-
-
-
-    // 특정 프로젝트의 후원자 수를 계산하는 메서드 (중복 후원자를 제거)
-    @Query("SELECT COUNT(DISTINCT sp.user.id) FROM SupportingProject sp WHERE sp.project.id = :projectId")
-    Long getTotalSupporters(@Param("projectId") Long projectId);
-
-    // project_id로 프로젝트의 end_date를 가져오는 쿼리
-    @Query("SELECT DISTINCT sp.supportingProject.project.endDate FROM SupportingPackage sp WHERE sp.supportingProject.project.id = :projectId")
-    Timestamp findProjectEndDateByProjectId(@Param("projectId") Long projectId);
+//    /* supporting 패키지에서  supporting_project_id가 projectid와 일치하는 걸 같고 packageprice를 모두 더함
+//     **/
+//    //projectPackage가 재활용이 될 수 있나??
+//    @Query("SELECT pr.projectPackage.totalSalesAmount FROM PackageRewards pr WHERE pr.project.id =: projectId")
+//    List<String> findPackagePricesByProjectId(@Param("projectId") Long projectId);
 
 
 
