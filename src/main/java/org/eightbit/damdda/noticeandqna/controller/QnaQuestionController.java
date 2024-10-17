@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
 import org.eightbit.damdda.noticeandqna.dto.validation.CreateValidation;
 import org.eightbit.damdda.noticeandqna.dto.validation.UpdateValidation;
+import org.eightbit.damdda.noticeandqna.service.QnaQuestionService;
 import org.eightbit.damdda.noticeandqna.service.QnaQuestionServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Q&A Question API", description = "Q&A의 질문을 관리하는 API입니다.")
 public class QnaQuestionController {
 
-    private final QnaQuestionServiceImpl qnaQuestionService;
+    private final QnaQuestionService qnaQuestionService;
 
     @PostMapping
     @Operation(summary = "Q&A 질문 생성", description = "새로운 Q&A 질문을 생성합니다.")

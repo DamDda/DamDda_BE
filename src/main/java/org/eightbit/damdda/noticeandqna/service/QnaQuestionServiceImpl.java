@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +58,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
 
         // 빌더 패턴을 사용하여 QnaQuestion 객체 생성
         QnaQuestion qnaQuestion = QnaQuestion.builder()
+                .id(qnaQuestionId)
                 .project(existingProject)
                 .title(qnaQuestionDTO.getTitle())
                 .content(qnaQuestionDTO.getContent())
@@ -135,12 +137,11 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
     @Override
     public void validateMemberIsQuestioner(Long memberId, Long qnaQuestionId) {
         // 질문 작성자 ID 조회.
-        Long questionerId = qnaQuestionRepository.findMemberIdById(qnaQuestionId);
+        Long questionerId = qnaQuestionRepository.findById(qnaQuestionId).orElseThrow().getMember().getId();
 
         // 작성자 불일치 또는 작성자가 없는 경우 예외 발생.
         if (questionerId == null) throw new NoSuchElementException("Author not found for the given question.");
         if (!memberId.equals(questionerId)) throw new UnauthorizedAccessException("Member ID unauthorized for qna question " + qnaQuestionId);
     }
-
 
 }

@@ -1,15 +1,16 @@
 package org.eightbit.damdda.noticeandqna.service;
 
 import org.eightbit.damdda.noticeandqna.dto.QnaReplyDTO;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface QnaReplyService {
 
     QnaReplyDTO saveQnaReply(QnaReplyDTO qnaReplyDTO);
 
-    void deleteQnaReply(QnaReplyDTO qnaReplyDTO);
+    boolean softDeleteQnaReply(Long qnaReplyId);
 
-    Page<QnaReplyDTO> getQnaReplies(int page, int size);
+    List<QnaReplyDTO> getQnaReplies(Long qnaQuestionId);
 
     void validateQnaReply(Long memberId, Long id);
 }

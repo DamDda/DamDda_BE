@@ -9,6 +9,7 @@ import org.eightbit.damdda.noticeandqna.dto.validation.UpdateValidation;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.PastOrPresent;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
@@ -35,5 +36,5 @@ public class BaseDTO {
      *   미래의 시간 값은 허용되지 않음.
      */
     @PastOrPresent(message = "저장된 시간은 과거 또는 현재 시점이어야 합니다.")
-    private LocalDateTime savedAt;
+    private Timestamp createdAt;
 }
