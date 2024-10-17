@@ -15,6 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllBySupportingProject_User_Id(Long userId);
     Optional<Order> findById(Long orderId);
 
+
 //    Optional<Order> findByLoginId(Long orderId);
 //    List<Order> findAllByUser_UserId(Long userId);
     List<Order> findAllBySupportingProject(SupportingProject supportingProject);
@@ -26,7 +27,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT p FROM Project p WHERE p.member.id = :memberId")
     List<Project> findProjectsByMemberId(@Param("memberId") Long memberId);
 
-
+    @Query("SELECT o FROM Order o WHERE o.payment.paymentId=:paymentId")
+    Order findByPaymentId(@Param("paymentId") Long paymentId);
 
 }
 

@@ -19,8 +19,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
 //    Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
     @Modifying
-    @Query("update Project p set p.fundsReceive = p.fundsReceive + :fundsReceive ,p.supporterCnt = p.supporterCnt+1 WHERE  p.id=:projectId")
-    void updateProjectStatus(@Param("fundsReceive") Long fundsReceive, @Param("projectId") Long projectId);
+    @Query("update Project p set p.fundsReceive = p.fundsReceive + :fundsReceive ,p.supporterCnt = p.supporterCnt+:increment WHERE  p.id=:projectId")
+    void updateProjectStatus(@Param("fundsReceive") Long fundsReceive, @Param("projectId") Long projectId, @Param("increment") Long increment);
+
+
 
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null and p.submitAt is NOT null")
     Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);

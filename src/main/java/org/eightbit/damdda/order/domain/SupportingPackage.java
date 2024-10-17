@@ -22,6 +22,9 @@ public class  SupportingPackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long packageId;
+    @ManyToOne
+    @JoinColumn(name="id")
+    private ProjectPackage projectPackage;
 
     @ManyToOne
     @JoinColumn(name = "supporting_project_id")
@@ -34,17 +37,14 @@ public class  SupportingPackage {
     @JoinColumn(name="order_id")
     private Order order;
 
-//    private String packageName;
-//    private Long packagePrice;
+    //    private String packageName;
+    //    private Long packagePrice;
     private Integer packageCount;
 
     //선택한 옵션
     @Column(columnDefinition = "json")
     private String OptionList;
 
-    @ManyToOne
-    @JoinColumn(name="id")
-    private ProjectPackage projectPackage;
 
 }
 

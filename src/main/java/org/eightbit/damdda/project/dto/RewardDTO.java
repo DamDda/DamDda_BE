@@ -23,5 +23,7 @@ public class RewardDTO {
 
     @NotBlank(message = "옵션 타입은 필수입니다.")
     private String optionType;
+
+
 }
 

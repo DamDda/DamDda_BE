@@ -217,33 +217,33 @@ public class OrderService {
 //    }
     @Transactional
     public void updateOrderStatus(Long orderId, String paymentStatus) {
-        log.info("update 실행 중");
         // 주문 ID로 주문을 조회
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-
         // 결제 상태 업데이트
         order.getSupportingProject().getPayment().setPaymentStatus(paymentStatus);
         //project의 후원자 수, 후원금액 업데이트
         Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
-        projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId());
+        projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
         orderRepository.save(order);  // 변경된 상태를 저장
     }
 
+    @Transactional
     public String cancelPayment(Long paymentId, String paymentStatus) {
         // paymentId로 결제를 찾아 해당 결제 정보를 가져옵니다.
-        Optional<SupportingProject> optionalSupportingProject = supporti ngProjectRepository.findById(paymentId);
-        if (optionalSupportingProject.isPresent()) {
-            SupportingProject supportingProject = optionalSupportingProject.get();
-
+        SupportingProject supportingProject = supportingProjectRepository.findByPaymentId(paymentId);
+        if (supportingProject!=null) {
             // 결제 상태 업데이트
             if (supportingProject.getPayment() != null) {
                 supportingProject.getPayment().setPaymentStatus(paymentStatus); // 결제 상태 업데이트
                 supportingProjectRepository.save(supportingProject); // 변경된 상태를 저장
+                Order order = orderRepository.findByPaymentId(paymentId);
+                Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
+                fundsReceive = fundsReceive *-1L;
+                projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),-1L);
                 return "결제 취소됨";
             } else {
                 throw new IllegalArgumentException("Payment not found for this supporting project");
-
             }
         } else {
             throw new IllegalArgumentException("SupportingProject not found with id: " + paymentId);

@@ -1,6 +1,7 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.dto.OrderDTO;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @SessionAttributes("supportingPackage")
-
+@Log4j2
 @RequestMapping("/damdda/order")
 ///http://localhost:9000/projects/myproject/order/create
 public class OrderController {
@@ -55,7 +56,6 @@ public class OrderController {
     @GetMapping("/supportingprojects")
     public List<OrderDTO> getOrdersByUserId(@AuthenticationPrincipal User user) {
         Long userId = user.getMemberId();
-        System.out.println(userId);
         return orderService.getOrdersWithPaymentByUserId(userId);
     }
 
@@ -107,6 +107,7 @@ public class OrderController {
             String status = (String) requestBody.get("paymentStatus");
 
             // 서비스에서 결제 상태 취소 처리**********
+            /*paymentId -> paymentId가 들어가서 repository바꿈.*/
             String message=orderService.cancelPayment(paymentId, status);
             System.out.println(message);
 

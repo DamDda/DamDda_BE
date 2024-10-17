@@ -25,7 +25,7 @@ public interface SupportingProjectRepository extends JpaRepository<SupportingPro
             "WHERE pr.project.id = :projectId GROUP BY pr.supportedAt")
     List<?> getDailySupportingByProjectId(@Param("projectId") Long projectId);
 
-
-
+    @Query("SELECT sp FROM SupportingProject sp WHERE sp.payment.paymentId=:paymentId")
+    SupportingProject findByPaymentId(@Param("paymentId") Long paymentId);
 
 }
