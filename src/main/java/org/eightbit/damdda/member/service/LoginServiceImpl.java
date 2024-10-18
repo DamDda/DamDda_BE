@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 @Log4j2
-public class LoginServiceImpl implements LoginService {
+public class  LoginServiceImpl implements LoginService {
 
     private final LoginRepository loginRepository;
     private final MemberRepository memberRepository;

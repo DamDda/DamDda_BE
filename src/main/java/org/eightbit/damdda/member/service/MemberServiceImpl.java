@@ -132,6 +132,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setPostCode(memberDTO.getPostCode());
 
         this.memberRepository.save(memberDTO.toEntity());
+        memberDTO.setPassword(null);
         return memberDTO;
     }
 
