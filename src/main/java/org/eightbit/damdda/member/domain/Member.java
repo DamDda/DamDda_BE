@@ -5,7 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "members")
@@ -16,14 +16,12 @@ import java.sql.Timestamp;
 @Builder
 @EntityListeners(value={AuditingEntityListener.class})
 public class Member {
-    // nullable 삭제
-
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, updatable = false)
+    @Column(unique = true)
     private String loginId;
 
     private String password;
@@ -31,7 +29,6 @@ public class Member {
     @Column(unique = true)
     private String nickname;
 
-    @Column(updatable = false)
     private String name;
 
     private String email;
@@ -44,13 +41,12 @@ public class Member {
 
     private String detailedAddress;
 
-    // int -> Integer로 변경
     private Integer postCode;
 
     @CreatedDate
     @Column(updatable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    private Timestamp deletedAt;
+    private LocalDateTime deletedAt;
 
 }

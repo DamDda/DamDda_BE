@@ -22,6 +22,7 @@ public class  SupportingPackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long packageId;
+
     @ManyToOne
     @JoinColumn(name="id")
     private ProjectPackage projectPackage;
@@ -32,7 +33,6 @@ public class  SupportingPackage {
 //
 //    @ManyToMany(mappedBy = "supportingPackages")
 //    private Set<Order> orders = new HashSet<>(); // 역방향 다대다 관계
-
     @ManyToOne
     @JoinColumn(name="order_id")
     private Order order;

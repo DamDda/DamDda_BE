@@ -1,10 +1,12 @@
 package org.eightbit.damdda.security.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.security.jwt.AuthEntryPoint;
 import org.eightbit.damdda.security.jwt.JwtService;
 import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.security.filter.LoginFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,11 +23,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -51,24 +55,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
-                .antMatchers(HttpMethod.GET,
-                        "/payment/**",
-                        "/member/findid",
-                        "/member/profile",
-                        "/member/check",
-                        "/member/check/**",
-                        "/package/{projectId}",
-                        "/files/projects/**",
-                        "/api/projects/projects",
-                        "/api/projects/{projectId}"
-                ).permitAll()
 
-                .antMatchers(HttpMethod.POST, "/member", "/member/login").permitAll()
+//                .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
+//                .antMatchers(HttpMethod.GET,
+//                        "/payment/**",
+//                        "/member/findid",
+//                        "/member/profile",
+//                        "/member/check",
+//                        "/member/check/**",
+//                        "/package/{projectId}",
+//                        "/files/projects/**",
+//                        "/api/projects/projects",
+//                        "/api/projects/{projectId}"
+
+                .antMatchers(HttpMethod.POST,
+                        "/member", // 회원 정보 등록(회원가입)
+                        "/member/login" // 로그인
+                ).permitAll()
+                .antMatchers(HttpMethod.GET,
+                        "/member/findid", // 아이디 찾기
+                        "/member/check", // 회원 정보 확인
+                        "/member/check/**", // 아이디, 닉네임 중복 확인
+                        "/project/projects", // 프로젝트 목록 조회
+                        "/files/projects/**", // 프로젝트 문서 및 이미지 조회
+                        "/project/{projectId}", // 프로젝트 상세 조회
+                        "/package/{projectId}", // 프로젝트 선물 구성 조회
+
+                        "/order/**" // 임시
+                ).permitAll()
+                .antMatchers(HttpMethod.PUT,
+                        "/member/{id}/password" // 비밀번호 수정
+                ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
-//                .logoutUrl("/member/logout")
-//                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)  // 로그인 필터 추가
@@ -76,17 +95,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
 
+    @Value("${app.cors.allowed-origins}")
+    private String[] allowedOrigins;  // Allowed origins from external configuration
+
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 주소
-//        config.setAllowedOrigins(List.of("*"));
-        config.setAllowedMethods(List.of("*"));
+
+        config.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-        config.applyPermitDefaultValues();
+
+        log.debug("CORS allowed origins: {}", Arrays.toString(allowedOrigins));
 
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }

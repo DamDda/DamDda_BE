@@ -19,15 +19,8 @@ import java.util.List;
 @Transactional
 public class SupportingProjectServiceImpl implements SupportingProjectService {
 
-
     private final SupportingProjectRepository supportingProjectRepository;
 
-    @Override
-    public long countByProject(Project project) {
-        return supportingProjectRepository.countByProject(project);
-    }
-
-    // 태욱
     // 일별 후원액 가져오는 쿼리
     @Override
     public List<?> getDailySupportingByProjectId(Long projectId) {

@@ -1,12 +1,8 @@
 package org.eightbit.damdda.order.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.domain.ProjectPackage;
-
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -17,6 +13,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@EntityListeners(value={AuditingEntityListener.class})
 public class Order {
 
     @Id
@@ -55,11 +53,8 @@ public class Order {
     @JoinColumn(name="supporting_package_id")
     private Set<SupportingPackage> supportingPackage;
 
-    private LocalDateTime createdAt;  // 주문 생성 시간
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;  // 주문 수정 시간
-
-
-
-
-
 }
