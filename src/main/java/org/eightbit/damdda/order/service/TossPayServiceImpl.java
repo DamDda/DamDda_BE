@@ -29,7 +29,7 @@ public class TossPayServiceImpl implements TossPayService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public TossResponse confirmPayment(String paymentKey, String orderId, String amount, String authorizationHeader) {
+    public TossResponse confirmPayment(String paymentKey, String orderId, String amount) {
         // Toss Payments 결제 승인 API 호출
         String tossApiUrl = "https://api.tosspayments.com/v1/payments/confirm";
 

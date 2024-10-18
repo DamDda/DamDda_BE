@@ -50,7 +50,7 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Override
     @Transactional
     public String uploadFile(MultipartFile file) throws IOException{
-        String fileName = "board/"+UUID.randomUUID()+"_"+file.getOriginalFilename();
+        String fileName = "collab/"+UUID.randomUUID()+"_"+file.getOriginalFilename();
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName,file.getInputStream(),null);
         amazonS3.putObject(putObjectRequest);
         return fileName;
@@ -160,8 +160,11 @@ public class CollaborationServiceImpl implements CollaborationService{
                 // 연관된 파일 삭제
                 collaboration.addSenderDeletedAt();
                 try {
-                    for(String collabDoc :collaboration.getCollabDocList() ) {
-                        deleteFile(collabDoc); //ncp에서 제거.
+                    List<String> collabDocList = collaboration.getCollabDocList();
+                    if(!collabDocList.isEmpty() && collabDocList!= null){
+                        for(String collabDoc :collabDocList ) {
+                            deleteFile(collabDoc); //ncp에서 제거.
+                        }
                     }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);

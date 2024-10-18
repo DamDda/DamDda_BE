@@ -169,11 +169,8 @@ public class OrderServiceImpl implements  OrderService{
     @Override
     public List<OrderDTO> getOrdersWithPaymentByUserId(Long userId) {
         // userId로 SupportingProject 가져오기
-        System.out.println("User ID in Service: " + userId);
 
         List<SupportingProject> supportingProjects = supportingProjectRepository.findAllByUser_Id(userId);
-
-        System.out.println("Supporting Projects: " + supportingProjects);
 
         // 각 후원 프로젝트에 속한 주문을 모두 조회
         return supportingProjects.stream()
@@ -197,29 +194,6 @@ public class OrderServiceImpl implements  OrderService{
         orderRepository.save(order);
     }
 
-
-    //결제 취소
-//    public OrderDTO updateOrderStatus(Long orderId, String status) {
-//        // 주문 ID로 주문을 찾기
-//        Optional<Order> orderOptional = orderRepository.findById(orderId);
-//        System.out.println(orderOptional+"*******");
-//        if (orderOptional.isPresent()) {
-//            Order order = orderOptional.get();
-//            order.getSupportingProject().getPayment().setPaymentStatus(status); // 결제 상태 업데이트
-//            orderRepository.save(order); // 변경된 주문 저장
-//
-//            // Order를 OrderDTO로 변환하여 반환
-//            return OrderDTO.builder()
-//                    .delivery(order.getDelivery())
-//                    .payment(order.getPayment())
-//                    .supportingProject(order.getSupportingProject())
-//                    .supportingPackage(order.getSupportingPackage())
-//                    .build();
-//        } else {
-//            // 주문이 없을 경우 적절한 예외 처리 (예: 주문을 찾을 수 없음)
-//            throw new EntityNotFoundException("Order not found with ID: " + orderId);
-//        }
-//    }
     @Transactional
     @Override
     public void updateOrderStatus(Long orderId, String paymentStatus) {
@@ -231,6 +205,9 @@ public class OrderServiceImpl implements  OrderService{
         //project의 후원자 수, 후원금액 업데이트
         Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
         projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
+        order.getSupportingPackage().forEach(sp ->{
+             packageRepository.updateQuantities(sp.getPackageCount(),sp.getProjectPackage().getId());
+        });
         orderRepository.save(order);  // 변경된 상태를 저장
     }
 

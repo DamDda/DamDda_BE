@@ -29,10 +29,9 @@ public ResponseEntity<TossResponse> tossSuccess(
         @RequestParam("paymentKey") String paymentKey,
         @RequestParam("orderId") String orderId,
         @RequestParam("amount") String amount,
-        @RequestHeader(value = "authorization", required = false) String authorizationHeader,
         HttpServletResponse response) throws IOException {
     // Toss 결제 승인 처리
-    TossResponse tossResponse = tossPayService.confirmPayment(paymentKey, orderId, amount,authorizationHeader);
+    TossResponse tossResponse = tossPayService.confirmPayment(paymentKey, orderId, amount);
     // 결제 성공 여부 확인
     try{if (tossResponse.getStatus().equals("DONE")) {
         String orderIdNew = orderId.replace("DAMDDA-ORDER-", "");
@@ -51,7 +50,7 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
                                                               @RequestHeader(value = "authorization", required = false) String authorizationHeader) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,authorizationHeader);
+        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId);
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 
@@ -60,9 +59,9 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoApproveResponse> afterPayRequest(
             @RequestParam("pg_token") String pgToken,
             @PathVariable("order_id") Long orderId,  // PathVariable로 order_id 받음
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader, HttpServletResponse response) {
+           HttpServletResponse response) {
         // pg_token과 orderId를 사용하여 결제 승인 요청
-        KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId,authorizationHeader);
+        KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId);
         // 결제 성공 시 React의 결제 완료 페이지로 리다이렉트
         try {
             response.sendRedirect("http://localhost:3000/payment/success?orderId=" + orderId);
