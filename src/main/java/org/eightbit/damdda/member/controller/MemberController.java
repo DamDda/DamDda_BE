@@ -2,7 +2,6 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
 import org.eightbit.damdda.security.user.AccountCredentials;
@@ -28,12 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import java.io.IOException;
 
 
 @Log4j2
@@ -90,7 +87,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
+    public ResponseEntity<Map<String, String>> login (@RequestBody AccountCredentials credentials){
         try {
             UsernamePasswordAuthenticationToken creds =         // 인증 아직 안됨
                     new UsernamePasswordAuthenticationToken(
@@ -106,12 +103,12 @@ public class MemberController {
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                     .body(Map.of("X-Nickname", currentUserNickname));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request){
+    public ResponseEntity<String> logout(){
         return ResponseEntity.ok("logout");
     }
 
@@ -137,7 +134,7 @@ public class MemberController {
 
     // GetMapping -> PostMapping으로 변경, 매개변수 @RequestParams String password -> @RequestBody PasswordDTO password로 변경
     @PostMapping("/confirmpw")
-    public ResponseEntity<?> confirmPassword (@RequestBody PasswordDTO password){
+    public ResponseEntity<MemberDTO> confirmPassword (@RequestBody PasswordDTO password){
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String loginId = user.getMember().getLoginId();
@@ -151,12 +148,12 @@ public class MemberController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProfile (@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
+    public ResponseEntity<MemberDTO> updateProfile (@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
         try {
             if (image != null) {
                 String fileName = memberService.uploadFile(image);
@@ -172,7 +169,7 @@ public class MemberController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<Map<String, Long>> checkMemberDetails(MemberSearchDTO memberSearchDTO){
+    public ResponseEntity<> checkMemberDetails(MemberSearchDTO memberSearchDTO){
         try {
             return ResponseEntity.ok(Map.of("id", loginService.checkMemberDetails(memberSearchDTO)));
         } catch (IllegalArgumentException e) {
