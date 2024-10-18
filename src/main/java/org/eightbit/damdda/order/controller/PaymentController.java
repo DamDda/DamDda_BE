@@ -51,8 +51,7 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
                                                               @RequestHeader(value = "authorization", required = false) String authorizationHeader) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,"x-damdda-authorization");
-        log.info("제발 이거 되면 카카오만 쓸게 "+kakaoReadyResponse);
+        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,authorizationHeader);
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 
@@ -61,7 +60,7 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoApproveResponse> afterPayRequest(
             @RequestParam("pg_token") String pgToken,
             @PathVariable("order_id") Long orderId,  // PathVariable로 order_id 받음
-            @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader, HttpServletResponse response) {
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader, HttpServletResponse response) {
         // pg_token과 orderId를 사용하여 결제 승인 요청
         KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId,authorizationHeader);
         // 결제 성공 시 React의 결제 완료 페이지로 리다이렉트

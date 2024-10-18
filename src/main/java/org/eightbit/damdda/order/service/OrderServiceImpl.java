@@ -439,7 +439,6 @@ public class OrderServiceImpl implements  OrderService{
         Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map( pac-> {
 
                     ObjectMapper objectMapper = new ObjectMapper();
-                    log.info("null이게요 아니게요"+pac.getOptionList());
                     PackageDTO packageDTO = PackageDTO.builder()
                             .id(pac.getProjectPackage().getId())
                             .name(pac.getProjectPackage().getPackageName())
@@ -473,13 +472,6 @@ public class OrderServiceImpl implements  OrderService{
     }
 
 }
-
-
-
-
-
-
-
 
 //public Optional<OrderDTO> getSupportingProject(Long orderId) {
 //    return orderRepository.findById(orderId).map(order -> {

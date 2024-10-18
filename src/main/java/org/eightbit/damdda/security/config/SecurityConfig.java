@@ -70,7 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST,
                         "/member", // 회원 정보 등록(회원가입)
-                        "/member/login" // 로그인
+                        "/member/login" ,// 로그인
+                        "/payment/kakao/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.GET,
                         "/member/findid", // 아이디 찾기
@@ -80,8 +81,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/files/projects/**", // 프로젝트 문서 및 이미지 조회
                         "/project/{projectId}", // 프로젝트 상세 조회
                         "/package/{projectId}", // 프로젝트 선물 구성 조회
-
-                        "/order/**" // 임시
+//                        "/payment/**",
+                        "/payment/kakao/**",
+                        "/payment/toss/**"
+//                        "/order/**" // 임시
                 ).permitAll()
                 .antMatchers(HttpMethod.PUT,
                         "/member/{id}/password" // 비밀번호 수정
