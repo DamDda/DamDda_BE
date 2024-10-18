@@ -19,10 +19,15 @@ public class RewardDTO {
     private int count; // 해당 package에서 선택된 reward의 개수.
 
     @JsonProperty("OptionList")
+   // private List<String> OptionList;
     private List<String> OptionList;
 
     @NotBlank(message = "옵션 타입은 필수입니다.")
     private String optionType;
+
+
+
+
 
 
 }
