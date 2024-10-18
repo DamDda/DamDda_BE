@@ -47,8 +47,7 @@ public ResponseEntity<TossResponse> tossSuccess(
 }
 
     @PostMapping("/kakao/ready")
-    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
-                                                              @RequestHeader(value = "authorization", required = false) String authorizationHeader) {
+    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
         KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId);
         return ResponseEntity.ok(kakaoReadyResponse);

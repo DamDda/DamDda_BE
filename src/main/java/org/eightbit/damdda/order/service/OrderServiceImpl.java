@@ -205,6 +205,7 @@ public class OrderServiceImpl implements  OrderService{
         //project의 후원자 수, 후원금액 업데이트
         Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
         projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
+        //package의 salesQuantity,
         order.getSupportingPackage().forEach(sp ->{
              packageRepository.updateQuantities(sp.getPackageCount(),sp.getProjectPackage().getId());
         });
