@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
 import org.eightbit.damdda.security.user.AccountCredentials;
@@ -154,20 +155,15 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}/photo")
-    public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
-        try {
-            String fileName = memberService.uploadFile(imageUrl);
-            return ResponseEntity.ok(fileName);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+    public ResponseEntity<?> updateProfile (@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
         try {
-            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+            if (image != null) {
+                String fileName = memberService.uploadFile(image);
+                memberDTO.setImageUrl(fileName);
+            }
+            MemberDTO updateInfo = memberService.updateMember(memberDTO);
+            return ResponseEntity.ok(updateInfo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
