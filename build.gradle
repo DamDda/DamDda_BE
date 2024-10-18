@@ -51,6 +51,9 @@ dependencies {
     // Database Driver
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+    // Apache POI for Excel handling
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
     // Development Only
 //    developmentOnly 'org.springframework.boot:spring-boot-devtools'  // 추가
 
@@ -101,8 +104,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:deprecation"  // Deprecated API 사용 경고 표시
+    options.compilerArgs << "-Xlint:unchecked"    // Unchecked 또는 unsafe operation 경고 표시
 }
 
 sourceSets {

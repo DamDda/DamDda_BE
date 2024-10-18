@@ -10,11 +10,9 @@ import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
 
-import org.eightbit.damdda.member.repository.RegisterRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,19 +32,15 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final RegisterRepository registerRepository;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // = new BCryptPasswordEncorder() 추가
-
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final AmazonS3 amazonS3;
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
-    @Autowired
-    private AmazonS3 amazonS3;
 
     @Override
     public Map<String, Object> getUserInfo(Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow();
-        Map userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id",member.getLoginId());
         userInfo.put("key",member.getId());
         userInfo.put("imageUrl",member.getImageUrl());
@@ -86,11 +80,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getMember(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) {
-            return MemberDTO.of(member.get());
-        }else {
-            return null;
-        }
+        return member.map(MemberDTO::of).orElse(null);
     }
 
     @Override
@@ -124,10 +114,9 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setDetailedAddress(null);
         memberDTO.setPostCode(null);
         memberDTO.setImageUrl(null);
-        memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        memberDTO.setDeletedAt(LocalDateTime.now());
 
         Member member = memberDTO.toEntity();
-        System.out.println(member);
         this.memberRepository.save(member);
     }
 

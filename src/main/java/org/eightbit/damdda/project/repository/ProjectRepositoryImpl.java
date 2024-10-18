@@ -18,7 +18,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 3. progress 필터
         if (progress != null) {
-            Timestamp now = new Timestamp(System.currentTimeMillis());
+            LocalDateTime now = LocalDateTime.now();
             if ("ongoing".equals(progress)) {
                 builder.and(project.startDate.before(now).and(project.endDate.after(now)));
             } else if ("upcoming".equals(progress)) {
@@ -78,41 +78,27 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         // 4. 정렬 처리 (동적 정렬)
         OrderSpecifier<?>[] orderSpecifiers = getOrderSpecifiers(sortConditions, project);
 
-
         // 데이터 조회 및 페이징 처리
         List<Project> content = queryFactory
                 .select(project)  // 여기에 Project 엔티티를 명시적으로 지정
                 .from(project)
                 .where(builder)
                 .orderBy(orderSpecifiers)
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
                 .fetch();
 
-        log.info(progress + "1111111111111111111111111111111111111111111");
-        log.info("!11111111111111111111111111111111111"+content.size());
-        log.info("Builder conditions: " + builder.toString());
-        log.info("Sort Conditions: " + sortConditions);
-        log.info("Order specifiers: " + Arrays.toString(orderSpecifiers));
+        log.info("[project] Builder conditions: {}", builder.toString());
+        log.info("[project] Sort Conditions: {}", sortConditions);
+        log.info("[project] Order specifiers: {}", Arrays.toString(orderSpecifiers));
 
 
         // 전체 개수 조회
         long total = queryFactory.selectFrom(project)
                 .where(builder)
-                .fetchCount();
-
-
+                .fetch().size();
 
         // PageImpl 객체로 반환
         return new PageImpl<>(content, pageable, total);
 
-//        // 5. 쿼리 실행
-//        return queryFactory.selectFrom(project)
-//                .where(builder)
-//                .orderBy(orderSpecifiers)  // 정렬 조건 추가
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
     }
 
     private OrderSpecifier<?>[] getOrderSpecifiers(List<String> sortConditions, QProject project) {
@@ -120,7 +106,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 정렬 조건이 비어 있으면 기본 정렬 추가
         if (sortConditions == null || sortConditions.isEmpty()) {
-            log.info("Sort conditions are empty, using default sort.");
+            log.info("[project] Sort conditions are empty, using default sort.");
             orderSpecifiers.add(project.id.desc());  // 기본 정렬 조건
         } else {
             for (String condition : sortConditions) {
@@ -150,12 +136,11 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 //                        orderSpecifiers.add(project.fundsReceive.desc());
 //                        break;
                     default:
-                        log.warn("Unknown sort condition: " + condition);
+                        log.warn("[project] Unknown sort condition: {}", condition);
                         break;
                 }
             }
         }
-
 
         return orderSpecifiers.toArray(new OrderSpecifier<?>[0]);
     }
@@ -167,7 +152,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         if (memberId == 0L) {
             return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
         }
-
 
         try {
             URL url = new URL(recommendationUrl + "api/recommend/" + memberId);
@@ -188,7 +172,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
                 //JSON parsing
                 JSONArray jsonArray = new JSONArray(response.toString());
-                log.info("RECOMMENDATION ORDER : " + jsonArray.toString());
+                log.info("[project] RECOMMENDATION ORDER : {}", jsonArray.toString());
 
                 if (jsonArray.isEmpty()) {
                     return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
@@ -212,13 +196,12 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 }
 
             } else {
-                log.info("GET Request failed, response code is " + responseCode);
+                log.info("[project] GET Request failed, response code is {}", responseCode);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         return null;
     }

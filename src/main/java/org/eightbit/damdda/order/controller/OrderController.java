@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -93,6 +94,15 @@ public class OrderController {
     public ResponseEntity<ProjectStatisticsDTO> getProjectStatistics(@PathVariable Long projectId) {
         ProjectStatisticsDTO statistics = orderService.getProjectStatistics(projectId);
         return new ResponseEntity<>(statistics, HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}/supporters/excel")
+    public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
+        // Generate the presigned URL by calling the service method
+        String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
+
+        // Return the presigned URL as a response
+        return ResponseEntity.ok(presignedUrl);
     }
 
 }

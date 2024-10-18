@@ -50,13 +50,12 @@ public class MemberController {
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
         Long memberId = user.getMemberId();
-        Map userInfo = memberService.getUserInfo(memberId);
+        Map<String, Object> userInfo = memberService.getUserInfo(memberId);
         return ResponseEntity.ok().body(userInfo);
     }
 
     @PostMapping
     public ResponseEntity<String> insertMember (@RequestBody RegisterDTO registerDTO){
-
         try {
             registerService.insertMember(registerDTO);
             return ResponseEntity.ok("success");
@@ -155,10 +154,9 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}/Photo")
+    @PutMapping("/{id}/photo")
     public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
-
             String fileName = memberService.uploadFile(imageUrl);
             return ResponseEntity.ok(fileName);
         } catch (IllegalArgumentException e) {
@@ -209,7 +207,6 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
-                                                    // 이거는 테스트에서 member 정보 다 보내야 해?
         try{
             memberService.deleteMember(user.getMemberId());
             return ResponseEntity.ok(Map.of("isSuccess", true));
