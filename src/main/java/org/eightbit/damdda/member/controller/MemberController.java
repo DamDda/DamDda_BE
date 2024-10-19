@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.eightbit.damdda.common.utils.validation.MemberValidator;
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
 import org.eightbit.damdda.security.user.AccountCredentials;
@@ -31,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-
-
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +43,7 @@ public class MemberController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
+    private final MemberValidator memberValidator;
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
@@ -138,9 +138,7 @@ public class MemberController {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String loginId = user.getMember().getLoginId();
-            System.out.println(loginId + " " + password);
             MemberDTO memberDTO = memberService.confirmPw(loginId, password.getPassword());
-            // password -> password.getPassword()로 변경
 
             if(memberDTO != null){
                 return ResponseEntity.ok(memberDTO);
@@ -153,7 +151,8 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateProfile (@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
+    public ResponseEntity<MemberDTO> updateProfile (@PathVariable Long id, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
+        memberValidator.validateMemberIdForLoginUser(id);
         try {
             if (image != null) {
                 String fileName = memberService.uploadFile(image);
@@ -186,6 +185,7 @@ public class MemberController {
             @PathVariable Long id,
             @RequestBody PasswordDTO passwordDTO
     ){
+        memberValidator.validateMemberIdForLoginUser(id);
         try {
             boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
             return ResponseEntity.ok(Map.of("isSuccess", result));
@@ -199,7 +199,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@PathVariable Long id, @AuthenticationPrincipal User user){
+        memberValidator.validateMemberIdForLoginUser(id);
         try{
             memberService.deleteMember(user.getMemberId());
             return ResponseEntity.ok(Map.of("isSuccess", true));
