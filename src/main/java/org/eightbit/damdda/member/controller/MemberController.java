@@ -169,7 +169,7 @@ public class MemberController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<> checkMemberDetails(MemberSearchDTO memberSearchDTO){
+    public ResponseEntity<Map<String, Long>> checkMemberDetails(MemberSearchDTO memberSearchDTO){
         try {
             return ResponseEntity.ok(Map.of("id", loginService.checkMemberDetails(memberSearchDTO)));
         } catch (IllegalArgumentException e) {
