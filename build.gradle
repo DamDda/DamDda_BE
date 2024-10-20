@@ -40,8 +40,8 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'  // 추가
-    testAnnotationProcessor 'org.projectlombok:lombok'  // 추가
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     // Testing Dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -53,9 +53,6 @@ dependencies {
 
     // Apache POI for Excel handling
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
-
-    // Development Only
-//    developmentOnly 'org.springframework.boot:spring-boot-devtools'  // 추가
 
     // ModelMapper
     implementation 'org.modelmapper:modelmapper:3.1.1'
@@ -100,29 +97,30 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 }
 
-
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:deprecation"  // Deprecated API 사용 경고 표시
-    options.compilerArgs << "-Xlint:unchecked"    // Unchecked 또는 unsafe operation 경고 표시
+    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked"
 }
 
+task compileQuerydsl(type: JavaCompile) {
+    source = sourceSets.main.java
+    classpath = configurations.compileClasspath
+    options.annotationProcessorPath = configurations.annotationProcessor
+    destinationDir = file("build/generated")
 
-
-def generated = 'src/main/generated'
-
-tasks.withType(JavaCompile) {
-    options.generatedSourceOutputDirectory = file(generated)
+    doFirst {
+        delete "build/generated"
+    }
 }
+
+compileJava.dependsOn compileQuerydsl
 
 sourceSets {
     main {
         java {
-            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+            srcDirs = ["$projectDir/src/main/java"]
+            exclude "build/generated/**/*"
         }
     }
-}
-
-clean {
-    delete file(generated)
 }
