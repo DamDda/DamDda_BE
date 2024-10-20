@@ -40,8 +40,8 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'  // 추가
+    testAnnotationProcessor 'org.projectlombok:lombok'  // 추가
 
     // Testing Dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -53,6 +53,9 @@ dependencies {
 
     // Apache POI for Excel handling
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // Development Only
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'  // 추가
 
     // ModelMapper
     implementation 'org.modelmapper:modelmapper:3.1.1'
@@ -98,17 +101,16 @@ dependencies {
 }
 
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
-//        }
-//    }
-//}
-def querydslSrcDir = "$projectDir/build/generated"
-clean {
-    delete file(querydslSrcDir)
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:deprecation"  // Deprecated API 사용 경고 표시
+    options.compilerArgs << "-Xlint:unchecked"    // Unchecked 또는 unsafe operation 경고 표시
 }
-tasks.withType(JavaCompile) {
-    options.generatedSourceOutputDirectory = file(querydslSrcDir)
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
 }

@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @EntityListeners(value = {AuditingEntityListener.class})
+@EqualsAndHashCode(exclude = "supportingPackages")
 public class Order {
 
     @Id
@@ -39,10 +40,12 @@ public class Order {
 
     // 양방향 관계 설정, mappedBy 사용
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SupportingPackage> supportingPackages;
+    private Set<SupportingPackage> supportingPackage;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
 }
