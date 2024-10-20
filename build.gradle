@@ -105,7 +105,7 @@ dependencies {
 //        }
 //    }
 //}
-def querydslSrcDir = '/build/generated'
+def querydslSrcDir = "$projectDir/build/generated"
 clean {
     delete file(querydslSrcDir)
 }
