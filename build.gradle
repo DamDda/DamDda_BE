@@ -97,30 +97,10 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:deprecation"
-    options.compilerArgs << "-Xlint:unchecked"
-}
-
-task compileQuerydsl(type: JavaCompile) {
-    source = sourceSets.main.java
-    classpath = configurations.compileClasspath
-    options.annotationProcessorPath = configurations.annotationProcessor
-    destinationDir = file("build/generated")
-
-    doFirst {
-        delete "build/generated"
-    }
-}
-
-compileJava.dependsOn compileQuerydsl
-
 sourceSets {
     main {
         java {
-            srcDirs = ["$projectDir/src/main/java"]
-            exclude "build/generated/**/*"
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
         }
     }
 }
