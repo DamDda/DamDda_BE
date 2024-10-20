@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    @Value("${recommendation.url}")
-    private String recommendationUrl;
+    @Value("${server.recommendation.base-url}")
+    private String recommendationBaseUrl;
 
     public ProjectRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
@@ -78,7 +78,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             }
         }
 
-// 4. 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
+        // 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
         builder.and(project.deletedAt.isNull()); // deletedAt이 NULL인 항목만 조회
 
         // 4. 정렬 처리 (동적 정렬)
@@ -91,11 +91,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 .where(builder)
                 .orderBy(orderSpecifiers)
                 .fetch();
-
-        log.info("[project] Builder conditions: {}", builder.toString());
-        log.info("[project] Sort Conditions: {}", sortConditions);
-        log.info("[project] Order specifiers: {}", Arrays.toString(orderSpecifiers));
-
 
         // 전체 개수 조회
         long total = queryFactory.selectFrom(project)
@@ -112,7 +107,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 정렬 조건이 비어 있으면 기본 정렬 추가
         if (sortConditions == null || sortConditions.isEmpty()) {
-            log.info("[project] Sort conditions are empty, using default sort.");
             orderSpecifiers.add(project.id.desc());  // 기본 정렬 조건
         } else {
             for (String condition : sortConditions) {
@@ -138,11 +132,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                     case "createdAt":
                         orderSpecifiers.add(project.createdAt.desc());
                         break;
-//                    case "fundsReceive":
-//                        orderSpecifiers.add(project.fundsReceive.desc());
-//                        break;
                     default:
-                        log.warn("[project] Unknown sort condition: {}", condition);
                         break;
                 }
             }
@@ -157,7 +147,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         }
 
         try {
-            URL url = new URL(recommendationUrl + "api/recommend/" + memberId);
+            URL url = new URL(recommendationBaseUrl + "/api/recommend/" + memberId);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
@@ -197,7 +187,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                             ).collect(Collectors.toList());
                     return new PageImpl<>(content, pageable, jsonArray.length());
                 }
-
             } else {
                 log.info("[project] GET Request failed, response code is {}", responseCode);
             }
