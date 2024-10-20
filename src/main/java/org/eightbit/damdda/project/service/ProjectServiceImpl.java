@@ -4,28 +4,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.admin.domain.AdminApproval;
 import org.eightbit.damdda.admin.service.AdminApprovalService;
-import org.eightbit.damdda.common.domain.DateEntity;
+import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
-import org.eightbit.damdda.project.domain.LikedProject;
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.domain.ProjectImage;
-import org.eightbit.damdda.project.domain.Tag;
+import org.eightbit.damdda.project.domain.*;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.repository.*;
+import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.lang.reflect.Field;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,30 +30,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
 
-
-    //    private final ProjectDocumentRepository projectDocumentRepository;
-//    private final ProjectImageRepository projectImageRepository;
     private final TagService tagService;
     private final ImgService imgService;
     private final DocService docService;
     private final MemberService memberService;
     private final CategoryRepository categoryRepository;
     private final AdminApprovalService adminApprovalService;
-    private final SupportingProjectService supportingProjectService;
     private final ProjectRepository projectRepository;
     private final LikedProjectRepository likedProjectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectDocumentRepository projectDocumentRepository;
-<<<<<<< Updated upstream
-//    private final CategoryRepository categoryRepository;
-=======
     private final SupportingProjectService supportingProjectService;
+    private final ProjectValidator projectValidator;
+    private final SecurityContextUtil securityContextUtil;
 
     @Override
-    public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
+    public ProjectRegisterDetailDTO getProjectDetail(Long projectId) {
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
-//수정필요
+        // TODO: 수정필요
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
@@ -66,41 +58,40 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<String> descriptionImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(projectImage -> projectImage.getUrl())
                 .collect(Collectors.toList());
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
 
-//        List<String> certDocs = projectDocs.stream()
-//                .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
-////                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
-////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
-//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
-//                .collect(Collectors.toList());
-//        List<String> reqDocs = projectDocs.stream()
-//                .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
-////                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
-////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
-//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
-//                .collect(Collectors.toList());
-
         List<String> docs = projectDocs.stream()
                 .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
->>>>>>> Stashed changes
 
+        List<Tag> tags = project.getTags();
+        List<String> tagDTOs = tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
 
-//    private final TagRepository tagRepository;
-//    private final CategoryRepository categoryRepository;
-//    private Member member = new Member();
+        ProjectRegisterDetailDTO dto = ProjectRegisterDetailDTO.builder()
+                .id(project.getId())
+                .title(project.getTitle())
+                .description(project.getDescription())
+                .descriptionDetail(project.getDescriptionDetail())
+                .targetFunding(project.getTargetFunding())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
+                .productImages(productImages)
+                .descriptionImages(descriptionImages)
+                .docs(docs)
+                .tags(tagDTOs)
+                .build();
+        return dto;
 
-
-//    public List<Project> getProjectsByIds(List<Long> projectIds) {
-//        return projectRepository.findAllById(projectIds);
-//    }
+    }
 
     @Override
-    public Long getMemberId(Long projectId){
+    public Long getOrganizerId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
         return project.getMember().getId();
@@ -109,45 +100,32 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions) {
         PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
-        log.info(progress + "1111111111111111111111111");
 
         Page<Project> projects;
         if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
-            // sort 조건 중 첫 번째가 "fundsReceive"일 때
             List<Project> sortProjects = projectRepository.findAllSortedByFundingRatio(category, search, progress);
-            // 페이지 번호에 맞는 결과를 가져오기 위한 subList
-//            int start = (int) pageable.getOffset();
-//            int end = Math.min((start + pageable.getPageSize()), sortProjects.size());
             projects = new PageImpl<>(sortProjects, pageable, sortProjects.size());
+        } else if (!sortConditions.isEmpty() && "recommend".equals(sortConditions.get(0))) {
+            projects = projectRepository.getProjectByRecommendOrder(memberId, category, search, progress, sortConditions, pageable);
         } else {
-            // 그 외의 경우
             projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
         }
-
-//                Page<Project> projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
-
-                     log.info(progress + "1111111111111111111111111");
 
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
                     .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
-            log.info(likedProjectId);
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
         }
 
-
-        // 3. approval이 1인 AdminApproval 항목 조회
         List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
 
-        // 4. approval이 1인 프로젝트 ID 목록 생성
         Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
                 .map(adminApproval -> adminApproval.getProject().getId())
                 .collect(Collectors.toSet());
 
-        // 5. Project에서 approval이 1인 프로젝트들만 필터링하여 DTO 변환
         List<ProjectBoxDTO> dtoList = projects.getContent().stream()
                 .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
                 .map(project -> ProjectBoxDTO.builder()
@@ -163,10 +141,6 @@ public class ProjectServiceImpl implements ProjectService {
                         .build())
                 .collect(Collectors.toList());
 
-//        log.info("11111111111111111111111111111111111"+dtoList.size());
-
-
-
 // 서비스 레이어에서 페이지네이션 적용
         int start = (page - 1) * size;
         int end = Math.min(start + size, dtoList.size());
@@ -180,92 +154,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
     }
 
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-//    @Override
-//    public PageResponseDTO<ProjectBoxDTO> findSortedProjects(Long memberId, PageRequestDTO pageRequestDTO, List<String> sortConditions) {
-//        // 1. Pageable 설정 (페이지네이션 + 동적 정렬 적용)
-//        Pageable pageable = PageRequest.of(
-//                pageRequestDTO.getPage() <= 0 ? 0 : pageRequestDTO.getPage() - 1,
-//                pageRequestDTO.getSize(),
-//                getSort(sortConditions));  // 동적 정렬 처리
-//
-//        final List<Long> likedProjectId;
-//        if (memberId != null) {
-//            likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-//                    .map(likedProject -> likedProject.getProject().getId())
-//                    .collect(Collectors.toList());
-//        } else {
-//            likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
-//        }
-//        // 2. 모든 프로젝트 페이징 조회 (deletedAt이 null인 경우만 조회)
-//        Page<Project> projects = projectRepository.findAllByDeletedAtIsNull(pageable);
-//
-//        // 3. approval이 1인 AdminApproval 항목 조회
-//        List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
-//
-//        // 4. approval이 1인 프로젝트 ID 목록 생성
-//        Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
-//                .map(adminApproval -> adminApproval.getProject().getId())
-//                .collect(Collectors.toSet());
-//
-//        // 5. Project에서 approval이 1인 프로젝트들만 필터링하여 DTO 변환
-//        List<ProjectBoxDTO> dtoList = projects.getContent().stream()
-//                .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
-//                .map(project -> ProjectBoxDTO.builder()
-//                        .title(project.getTitle())
-//                        .description(project.getDescription())
-//                        .thumbnailUrl(project.getThumbnailUrl())
-//                        .fundsReceive(project.getFundsReceive())
-//                        .targetFunding(project.getTargetFunding())
-//                        .nickName(project.getMember().getNickname())
-//                        .endDate(project.getEndDate())
-//                        .Liked(likedProjectId.contains(project.getId()))  // 좋아요 여부는 기본적으로 false
-//                        .build())
-//                .collect(Collectors.toList());
-//
-//        // 6. PageResponseDTO로 반환
-//        return PageResponseDTO.<ProjectBoxDTO>withAll()
-//                .pageRequestDTO(pageRequestDTO)  // 페이지 요청 정보
-//                .dtoList(dtoList)  // 필터링된 DTO 리스트
-//                .total(dtoList.size())
-//                .build();
-//    }
-
-    // 동적 정렬 설정
-//    private Sort getSort(List<String> sortConditions) {
-//        Sort sort = Sort.unsorted();
-//        for (String condition : sortConditions) {
-//            switch (condition) {
-////                case "fundsReceive":
-////                    sort = sort.and(Sort.by(Sort.Direction.DESC, "fundsReceive"));
-////                    break;
-//                case "targetFunding":
-//                    sort = sort.and(Sort.by(Sort.Direction.DESC, "targetFunding"));
-//                    break;
-//                case "viewCnt":
-//                    sort = sort.and(Sort.by(Sort.Direction.DESC, "viewCnt"));
-//                    break;
-//                case "supporterCnt":
-//                    sort = sort.and(Sort.by(Sort.Direction.DESC, "supporterCnt"));
-//                    break;
-//                case "likeCnt":
-//                    sort = sort.and(Sort.by(Sort.Direction.DESC, "likeCnt"));
-//                    break;
-//                case "registDate":
-//                    sort = sort.and(Sort.by(Sort.Direction.ASC, "createdAt"));
-//                    break;
-//                case "endDate":
-//                    sort = sort.and(Sort.by(Sort.Direction.ASC, "endDate"));
-//                    break;
-//            }
-//        }
-//        return sort;
-//    }
-
-
     @Override
     public PageResponseDTO<ProjectBoxDTO> getListProjectBoxLikeDTO(Long memberId, PageRequestDTO pageRequestDTO) {
         Pageable pageable =
@@ -273,17 +161,13 @@ public class ProjectServiceImpl implements ProjectService {
                                 0 : pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(),
                         Sort.by("id").ascending());
 
-
         Page<LikedProject> likedProjects = likedProjectRepository.findAllByMember_Id(memberId, pageable);
-
         List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
 
-        // 3. approval이 1인 프로젝트 ID 목록 생성
         Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
                 .map(adminApproval -> adminApproval.getProject().getId())
                 .collect(Collectors.toSet());
 
-        // 4. LikedProject에서 approval이 1인 프로젝트들만 필터링
         List<ProjectBoxDTO> dtoList = likedProjects.getContent().stream()
                 .map(LikedProject::getProject)
                 .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
@@ -300,15 +184,13 @@ public class ProjectServiceImpl implements ProjectService {
                         .build())
                 .collect(Collectors.toList());
 
-
         return PageResponseDTO.<ProjectBoxDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total(dtoList.size())
+                .total((int) likedProjects.getTotalElements())
                 .build();
 
     }
-
 
     @Override
     public PageResponseDTO<ProjectBoxHostDTO> getListProjectBoxHostDTO(Long memberId, PageRequestDTO pageRequestDTO) {
@@ -319,7 +201,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         Page<Project> result = projectRepository.listOfProjectBoxHost(memberId, pageable);
 
-
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
@@ -328,8 +209,6 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
         }
-
-
 
         List<ProjectBoxHostDTO> dtoList = result.getContent().stream()
                 .map(project -> {
@@ -354,74 +233,33 @@ public class ProjectServiceImpl implements ProjectService {
         return PageResponseDTO.<ProjectBoxHostDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-
                 .total((int) result.getTotalElements())  // 전체 프로젝트 수를 설정
-
                 .build();
 
     }
 
-//    @Override
-//    public PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(String category, String search, String progress, Long memberId, PageRequestDTO pageRequestDTO) {
-////        PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
-//        Pageable pageable =
-//                PageRequest.of(pageRequestDTO.getPage() <= 0 ?
-//                                0 : pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-//
-//        final List<Long> likedProjectId;
-//        if (memberId != null) {
-//            likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-//                    .map(likedProject -> likedProject.getProject().getId())
-//                    .collect(Collectors.toList());
-//        } else {
-//            likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
-//        }
-//
-//        log.info(category + search +  progress + "1111111111111111111111111111111111111");
-//        Page<Project> projects = projectRepository.findAllSortedByFundingRatio(category, search, progress);
-//        log.info(projects.getSize() + "dldldlld1111111111111111111111111111111111111");
-//
-//                List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
-//
-//        // 3. approval이 1인 프로젝트 ID 목록 생성
-//        Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
-//                .map(adminApproval -> adminApproval.getProject().getId())
-//                .collect(Collectors.toSet());
-//
-//        // 4. LikedProject에서 approval이 1인 프로젝트들만 필터링
-//        List<ProjectBoxDTO> dtoList = projects.getContent().stream()
-//                .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
-//                .map(project -> ProjectBoxDTO.builder()
-//                        .id(project.getId())
-//                        .title(project.getTitle())
-//                        .description(project.getDescription())
-//                        .thumbnailUrl(project.getThumbnailUrl())
-//                        .fundsReceive(project.getFundsReceive())
-//                        .targetFunding(project.getTargetFunding())
-//                        .nickName(project.getMember().getNickname())
-//                        .endDate(project.getEndDate())
-//                        .Liked(likedProjectId.contains(project.getId()))  // 좋아요 여부는 기본적으로 false
-//                        .build())
-//                .collect(Collectors.toList());
-//
-//        log.info(projects.getSize() + "dd22222222222222211111111111111111111111111111111111111111111111111112222222222222222222222222222222222");
-//        log.info(dtoList.size() + "dd22222222222222211111111111111111111111111111111111111111111111111112222222222222222222222222222222222");
-//
-//
-//        return PageResponseDTO.<ProjectBoxDTO>withAll()
-//                .pageRequestDTO(pageRequestDTO)
-//                .dtoList(dtoList)
-//                .total(dtoList.size())
-//                .build();
-//
-//    }
+    @Override
+    public List<WritingProjectDTO> getWritingProjectDTO(Long memberId) {
+        List<Project> result = projectRepository.findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(memberId);
+        List<WritingProjectDTO> dtoList = result.stream()
+                .map(project -> {
+                    return WritingProjectDTO.builder()
+                            .id(project.getId())
+                            .title(project.getTitle())
+                            .build();
+                })
+                .collect(Collectors.toList());
 
+        return dtoList;
+
+    }
 
     @Override
     public ProjectDetailHostDTO readProjectDetailHost(Long projectId, Long memberId) {
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
 
         final List<Long> likedProjectId;
         if (memberId != null) {
@@ -432,10 +270,9 @@ public class ProjectServiceImpl implements ProjectService {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
         }
 
-
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
-                .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
                 .map(ProjectImage::getUrl)
                 .collect(Collectors.toList());
 
@@ -447,19 +284,16 @@ public class ProjectServiceImpl implements ProjectService {
         AdminApproval adminApproval = adminApprovalService.findByProjectId(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
 
-
-
         ProjectDetailHostDTO projectDetailHostDTO = ProjectDetailHostDTO.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .fundsReceive(project.getFundsReceive())
                 .targetFunding(project.getTargetFunding())
-                .category(project.getCategory().getName())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
                 .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
-//                .supporterCnt(supportingProjectService.countByProject(project))
                 .supporterCnt(project.getSupporterCnt())
                 .approval(adminApproval.getApproval())
                 .rejectMessage(adminApproval.getApprovalText())
@@ -474,9 +308,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponseDetailDTO readProjectDetail(Long projectId, Long memberId) {
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
 
         final List<Long> likedProjectId;
         if (memberId != null) {
@@ -486,7 +320,6 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
         }
-
 
         // deletedAt이 null이 아니면 예외를 발생시켜서 처리
         if (project.getDeletedAt() != null) {
@@ -503,27 +336,16 @@ public class ProjectServiceImpl implements ProjectService {
                     .collect(Collectors.toList());
 
             List<String> descriptionImages = projectImages.stream()
-
                     .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
-//        List<String> productImages = new ArrayList<>();
-//        List<String> descriptionImages = new ArrayList<>();
-//        for(ProjectImage projectImage : projectImages){
-//            if(projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE")){
-//                productImages.add(projectImage.getUrl());
-//            } else if(projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE")){
-//                descriptionImages.add(projectImage.getUrl());
-//            }
-//        }
+
             List<Tag> tags = project.getTags();
             List<String> tagDTOs = tags.stream()
                     .map(Tag::getName)
                     .collect(Collectors.toList());
 
             project.setViewCnt(project.getViewCnt() + 1);
-//        project.setSupporterCnt(supportingProjectService.countByProject(project));
 
             ProjectResponseDetailDTO projectResponseDetailDTO = ProjectResponseDetailDTO.builder()
                     .id(project.getId())
@@ -532,11 +354,10 @@ public class ProjectServiceImpl implements ProjectService {
                     .descriptionDetail(project.getDescriptionDetail())
                     .fundsReceive(project.getFundsReceive())
                     .targetFunding(project.getTargetFunding())
-                    .category(project.getCategory().getName())
-                    .nickName(project.getMember().getNickname())
+                    .category(project.getCategory() == null ? null : project.getCategory().getName())
+                    .nickName(project.getMember() == null ? null : project.getMember().getNickname())
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
-//                    .supporterCnt(supportingProjectService.countByProject(project))
                     .supporterCnt(project.getSupporterCnt())
                     .likeCnt(project.getLikeCnt())
                     .thumbnailUrl(project.getThumbnailUrl())
@@ -554,12 +375,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void delProject(Long projectId) {
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
-//        Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
         List<Tag> delTags = tagService.delProjectFromTags(project);
-
 
         boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
@@ -567,27 +386,10 @@ public class ProjectServiceImpl implements ProjectService {
         docService.deleteDocFiles(projectDocumentRepository.findAllByProjectId(projectId));
 
         if (delImg) {
-
-            // 삭제 시간을 현재 시간으로 설정
-//            project.setDeletedAt(Timestamp.from(Instant.now()));
-            try {
-                // DateEntity 클래스에서 deletedAt 필드를 가져옴
-                Field deletedAtField = DateEntity.class.getDeclaredField("deletedAt");
-                deletedAtField.setAccessible(true);  // private 필드에 접근 가능하도록 설정
-
-                // 현재 시간으로 deletedAt 필드 설정
-                deletedAtField.set(project, Timestamp.from(Instant.now()));
-
-                // 변경 사항 저장
-                projectRepository.save(project);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();  // 예외 처리
-            }
-
-            // 변경 사항을 저장하여 소프트 삭제 수행
+            project.setDeletedAt(LocalDateTime.from(Instant.now()));
             projectRepository.save(project);
-//            projectRepository.delete(project);
         }
+
     }
 
     @Override
@@ -597,8 +399,6 @@ public class ProjectServiceImpl implements ProjectService {
                          List<MultipartFile> productImages,
                          List<MultipartFile> descriptionImages,
                          List<MultipartFile> docs) {
-
-//        Category category = categoryService.registerCategory(projectDetailDTO.getCategory());
 
         List<Tag> tags = tagService.registerTags(projectDetailDTO.getTags());
 
@@ -620,7 +420,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .viewCnt(0L)       // 기본값 0
                 .likeCnt(0L)       // 기본값 0
                 .thumbnailUrl("")  // 기본값은 빈 문자열로 설정
-                .submitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null)  // 제출 시간 설정
+                .submitAt(submit ? LocalDateTime.now() : null)  // 제출 시간 설정
                 .build();
 
 
@@ -628,51 +428,140 @@ public class ProjectServiceImpl implements ProjectService {
         project = projectRepository.save(project);
         final Long projectId = project.getId();
 
-//        // 2. 카테고리 설정
-//        category = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());  // 카테고리 등록 서비스 호출
-//        project.setCategory(category);  // 카테고리 설정
-
 
         // 3. 태그 설정
         tags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
         project.setTags(tags);  // 프로젝트에 태그 추가
-
-
-        imgService.saveImages(project, productImages, descriptionImages);
-
-        docService.saveDocs(project, docs);
-
-        // 5. 최종 프로젝트 저장
         return project.getId();
+
+    }
+
+
+    // T를 제너릭 타입으로 선언하고, 그 타입은 getUrl() 메서드를 가진 객체로 제한
+    protected <T> int isObjectInUpdateFiles(List<MetaDTO> files, T object, Function<T, String> urlGetter) {
+        if (files != null) {
+            for (MetaDTO file : files) {
+                if (file.getUrl().equals(urlGetter.apply(object))) {  // 제너릭으로 받아온 객체의 URL과 비교
+                    return file.getOrd();
+                }
+            }
+        }
+        return -1;
+    }
+
+    // 제너릭 타입 T를 사용하도록 수정 (BiConsumer로 변경)
+    protected <T> List<T> updateFiles(List<MetaDTO> files, List<T> objects,
+                                      Function<T, String> urlGetter,
+                                      BiConsumer<T, Integer> ordSetter) {
+        List<T> deleteList = new ArrayList<>();
+        if (objects != null) {
+            for (T object : objects) {
+                int isObjInUpdateFiles = isObjectInUpdateFiles(files, object, urlGetter);
+                if (isObjInUpdateFiles != -1) {
+                    ordSetter.accept(object, isObjInUpdateFiles);  // ordSetter가 이제 두 개의 파라미터를 받음
+                } else {
+                    deleteList.add(object);
+                }
+            }
+        }
+        return deleteList;
+    }
+
+
+    protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
+        if (filesMeta == null || files == null) {
+            return null;
+        }
+
+        List<FileDTO> result = new ArrayList<>();
+        // productImagesMeta와 productImages 리스트가 동일한 크기인지 확인
+        if (filesMeta.size() == files.size()) {
+            // 각 FileDTO 객체의 file 필드에 같은 인덱스의 MultipartFile을 할당
+            for (int i = 0; i < filesMeta.size(); i++) {
+                FileDTO fileDTO = new FileDTO();
+                // FileDTO의 file 필드에 MultipartFile을 설정
+                fileDTO.setFile(files.get(i));
+                fileDTO.setUrl(filesMeta.get(i).getUrl());
+                fileDTO.setOrd(filesMeta.get(i).getOrd());
+                result.add(fileDTO);
+            }
+        } else {
+            // 크기가 다르면 오류 처리
+            throw new IllegalArgumentException("File metadata and actual file list sizes do not match");
+        }
+        return result;
+
     }
 
     @Override
     public Long updateProject(ProjectDetailDTO projectDetailDTO,
                               Long projectId,
                               boolean submit,
+                              List<MetaDTO> productImagesMeta,
+                              List<MetaDTO> descriptionImagesMeta,
+                              List<MetaDTO> docsMeta,
                               List<MultipartFile> productImages,
                               List<MultipartFile> descriptionImages,
-                              List<MultipartFile> docs) {
+                              List<MultipartFile> docs,
+                              List<MetaDTO> updateProductImage,
+                              List<MetaDTO> updateDescriptionImage,
+                              List<MetaDTO> updateDocs
+    ) {
 
+        List<FileDTO> productImagesFile = fileInputMeta(productImagesMeta, productImages);
+        List<FileDTO> descriptionImagesFile = fileInputMeta(descriptionImagesMeta, descriptionImages);
+        List<FileDTO> docsFile = fileInputMeta(docsMeta, docs);
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-//        Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
-//        Category newCategory = categoryService.registerCategory(projectDetailDTO.getCategory());
-//        Category newCategory = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());
-
         List<Tag> delTags = tagService.delProjectFromTags(project);
-//        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
-        Boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
-        project.setThumbnailUrl(null);
 
-        docService.deleteDocFiles(projectDocumentRepository.findAllByProjectId(projectId));
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
+
+        List<ProjectImage> projectProductImages = projectImages.stream()
+                .filter(image -> image.getImageType().getImageType().equals("product") || image.getImageType().getImageType().equals("thumbnail"))
+                .collect(Collectors.toList());
+
+        List<ProjectImage> projectDescriptionImages = projectImages.stream()
+                .filter(image -> image.getImageType().getImageType().equals("description"))
+                .collect(Collectors.toList());
+
+
+        List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
+        List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
+
+        List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectId(projectId);
+
+        List<ProjectDocument> delDocs = updateFiles(updateDocs, projectDocs, ProjectDocument::getUrl, (ProjectDocument, ord) -> ProjectDocument.setOrd(ord));
+
+        imgService.deleteImageFiles(delProductImages);
+        imgService.deleteImageFiles(delDescriptionImages);
+        docService.deleteDocFiles(delDocs);
+
+        log.info("check productImagesFile files : " + productImagesFile);
+        log.info("check productImagesFile files : " + productImagesFile);
+        if (productImagesFile != null && productImagesFile.size() > 0) {
+            imgService.saveImages(project, productImagesFile, 1L);
+        }
+
+        if (descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+            imgService.saveImages(project, descriptionImagesFile, 3L);
+        }
+
+        ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
+        if (thumbnailImage != null) {
+            log.info("thumbnailImage : " + thumbnailImage);
+            project.setThumbnailUrl(imgService.saveThumbnailImages(project, thumbnailImage));
+        }
+
+        if (docsFile != null && docsFile.size() > 0) {
+            docService.saveDocs(project, docsFile);
+        }
 
         project.setTags(newTags);
-//        project.setCategory(newCategory);
         project.setCategory(categoryRepository.findByName(projectDetailDTO.getCategory()));
         project.setTitle(projectDetailDTO.getTitle());
         project.setDescription(projectDetailDTO.getDescription());
@@ -680,26 +569,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStartDate(projectDetailDTO.getStartDate());
         project.setEndDate(projectDetailDTO.getEndDate());
         project.setTargetFunding(projectDetailDTO.getTargetFunding());
-//        project.setFundsReceive(0L);  // 기본값 0
-//        project.setSupporterCnt(0L);  // 기본값 0
-//        project.setViewCnt(0L);       // 기본값 0
-//        project.setLikeCnt(0L);       // 기본값 0
-//        project.setThumbnailUrl("");  // 기본값은 빈 문자열로 설정
-        project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
+        project.setSubmitAt(submit ? LocalDateTime.now() : null);  // 제출 시간 설정
 
-        if ((productImages != null && !productImages.isEmpty()) || (descriptionImages != null && !descriptionImages.isEmpty())) {
-            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
-            imgService.saveImages(project, productImages, descriptionImages);
-        }
-//        imgService.saveImages(project, productImages, descriptionImages);
-        if (docs != null && !docs.isEmpty()) {
-            docService.saveDocs(project, docs);
-        }
+        if (submit) adminApprovalService.submitProject(project);
 
-        // 5. 최종 프로젝트 저장
         return project.getId();
     }
-
 
     @Override
     public Project findById(Long id) {
@@ -710,6 +585,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<?> getDailySupportingByProjectId(Long projectId) {
-       return supportingProjectService.getDailySupportingByProjectId(projectId);
+        return supportingProjectService.getDailySupportingByProjectId(projectId);
     }
 }

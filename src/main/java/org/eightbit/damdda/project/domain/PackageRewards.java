@@ -1,9 +1,9 @@
 package org.eightbit.damdda.project.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PackageRewards extends BaseEntity {
+public class PackageRewards {
     /************************중요**************************/
     /*Package만의 id를 만드는 방법도 고려*/
     @Id
@@ -25,7 +25,7 @@ public class PackageRewards extends BaseEntity {
     private ProjectPackage projectPackage;
 
     @ManyToOne
-    @JoinColumn(name="reward_id")
+    @JoinColumn(name = "reward_id")
     private ProjectRewards projectReward;
 
     @ManyToOne
@@ -35,7 +35,9 @@ public class PackageRewards extends BaseEntity {
     private int rewardCount; //선물 갯수
 
 
-    public void setProject(Project project){this.project = project;}
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
     // toString 메서드 대신 별도의 메서드 사용 -> toString 순환 참조 문제.
     public String getProjectPackageInfo() {

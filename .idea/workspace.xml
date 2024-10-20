@@ -1,106 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-    <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="" />
-=======
-    <list default="true" id="1badf8a7-30ae-4441-baf5-e44702969a3c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/DailySupporting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/Order.java" afterDir="false" />
+    <list default="true" id="e6e96913-e35a-44ad-8a2b-4466ce0ad105" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingPackage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/domain/SupportingProject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/dto/OrderDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/dto/OrderDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingPackageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingPackageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingProjectRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/repository/SupportingProjectRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/order/service/SupportingProjectServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/deliveries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/deliveries.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/members.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/members.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/orders.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/orders.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/package.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/package.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/payments.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/payments.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/project_images.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/project_images.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/projects.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/projects.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/test.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/test.ipynb" afterDir="false" />
     </list>
->>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
-  <component name="ProjectId" id="2m8QVEic99Z9tfnlDrT4tryq3kj" />
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2neNK59QmLKJFuFAQ5H0I4qnJSB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-<<<<<<< Updated upstream
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-=======
-    "Gradle.Build DamDda_BE.executor": "Run",
-    "Gradle.DamDda_BE [clean].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.DamDdaApplication.executor": "Run",
->>>>>>> Stashed changes
-    "git-widget-placeholder": "feature/project",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/ijuhyeon/juhyeon/computer/git/DamDda_BE",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build DamDda_BE.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.DamDdaApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix/feature-area&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
+    ]
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="DamDda_BE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="DamDda_BE" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DamDdaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="DamDda.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.eightbit.damdda.DamDdaApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="디폴트 작업">
-      <changelist id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="" />
-      <created>1726455745756</created>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e6e96913-e35a-44ad-8a2b-4466ce0ad105" name="Changes" comment="" />
+      <created>1729329515154</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1726455745756</updated>
-      <workItem from="1726455747229" duration="17000" />
-<<<<<<< Updated upstream
-=======
-      <workItem from="1727837533004" duration="168000" />
-      <workItem from="1727837707801" duration="15727000" />
-      <workItem from="1727860478789" duration="5148000" />
-      <workItem from="1727945444611" duration="3406000" />
-      <workItem from="1727951529729" duration="187000" />
-      <workItem from="1728004742897" duration="3704000" />
-      <workItem from="1728367410066" duration="9236000" />
-      <workItem from="1728450368322" duration="24498000" />
-      <workItem from="1728519714637" duration="5987000" />
-      <workItem from="1728538796591" duration="1614000" />
-      <workItem from="1728544118386" duration="357000" />
-      <workItem from="1728564216950" duration="1328000" />
-      <workItem from="1728604757887" duration="5213000" />
-      <workItem from="1728629568335" duration="6606000" />
-      <workItem from="1728897907271" duration="10867000" />
-      <workItem from="1728951303828" duration="4811000" />
->>>>>>> Stashed changes
+      <updated>1729329515154</updated>
+      <workItem from="1729329516687" duration="2859000" />
+      <workItem from="1729332478115" duration="7776000" />
+      <workItem from="1729397311494" duration="624000" />
+      <workItem from="1729398951309" duration="5758000" />
+      <workItem from="1729406612823" duration="4730000" />
     </task>
     <servers />
   </component>

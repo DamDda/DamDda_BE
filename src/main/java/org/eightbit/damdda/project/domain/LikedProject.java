@@ -1,13 +1,10 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LikedProject extends BaseEntity {
+public class LikedProject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     private Member member;
 
@@ -26,5 +27,5 @@ public class LikedProject extends BaseEntity {
 
     @CreatedDate
     @Column(updatable = true)
-    private Timestamp likedAt;
+    private LocalDateTime likedAt;
 }

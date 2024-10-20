@@ -1,10 +1,7 @@
 package org.eightbit.damdda.project.domain;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,22 +14,24 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectPackage extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ProjectPackage {
+
     /************************중요*******************/
     /*quantityLimited 줄어드는 메소드 필요.*/
 
     @Builder.Default // 초기값을 빌더에서 사용하기 위해 추가.
     @OneToMany(mappedBy = "projectPackage", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PackageRewards> packageRewards = new ArrayList<>();//초기화 안 하면 add 불가능
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String packageName;
 
     private int packagePrice;
 
     private int quantityLimited;
+
+    private int salesQuantity;
 
     public void change(String name, int price, int quantityLimited) {
         this.packageName = name;

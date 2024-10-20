@@ -4,34 +4,34 @@ import org.eightbit.damdda.project.domain.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 
-public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom  {
+public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom {
+
 //    @Query("SELECT p FROM Project p WHERE p.deletedAt IS NULL")
 //    List<Project> findAllActiveProjects();
 
 //    @Query("select p from Project p where p.member.id = :memberId" )
 //    Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
-    @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null")
+    @Modifying
+    @Query("update Project p set p.fundsReceive = p.fundsReceive + :fundsReceive ,p.supporterCnt = p.supporterCnt+:increment WHERE  p.id=:projectId")
+    void updateProjectStatus(@Param("fundsReceive") Long fundsReceive, @Param("projectId") Long projectId, @Param("increment") Long increment);
+
+    @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null and p.submitAt is NOT null")
     Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null")
     Project findByMemberId(@Param("memberId") Long memberId);
 
-
-
     Page<Project> findAllByDeletedAtIsNull(Pageable pageable);
-//    public Project findByMemberId(Long memberId);
 
-//    @Query("SELECT p FROM Project p " +
-//            "WHERE p.deletedAt IS NULL " +
-//            "ORDER BY (p.fundsReceive / p.targetFunding) DESC")
-//    Page<Project> findAllSortedByFundingRatio(Pageable pageable);
+    List<Project> findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(Long memberId);
 
     @Query("SELECT p FROM Project p "
             + "WHERE p.deletedAt IS NULL "  // 삭제된 항목 필터
@@ -42,17 +42,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             + "OR EXISTS (SELECT t FROM Tag t WHERE t MEMBER OF p.tags AND t.name LIKE %:search%)) "  // 검색어 필터 (태그 포함)
             + "AND (:progress IS NULL OR "
             + "     (:progress = 'all') OR "
-            + "     (:progress = 'ongoing' AND CURRENT_TIMESTAMP BETWEEN p.startDate AND p.endDate) OR "  // 진행 중 필터
-            + "     (:progress = 'upcoming' AND p.startDate > CURRENT_TIMESTAMP) OR "  // 예정 필터
-            + "     (:progress = 'completed' AND p.endDate < CURRENT_TIMESTAMP)) " // 완료된 필터
+            + "     (:progress = 'ongoing' AND CURRENT_LocalDateTime BETWEEN p.startDate AND p.endDate) OR "  // 진행 중 필터
+            + "     (:progress = 'upcoming' AND p.startDate > CURRENT_LocalDateTime) OR "  // 예정 필터
+            + "     (:progress = 'completed' AND p.endDate < CURRENT_LocalDateTime)) " // 완료된 필터
             + "ORDER BY (p.fundsReceive / p.targetFunding) DESC"
     )
     List<Project> findAllSortedByFundingRatio(@Param("category") String category,
                                               @Param("search") String search,
                                               @Param("progress") String progress);
-
-
-//    List<Project> findSortedAndFilteredProjects(List<Long> approvedProjectIds, Pageable pageable);
-
 
 }

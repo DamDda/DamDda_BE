@@ -1,11 +1,12 @@
 package org.eightbit.damdda.order.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "supporting_packages")
@@ -13,32 +14,26 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class  SupportingPackage {
+public class SupportingPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long packageId;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "project_package_id")
+    private ProjectPackage projectPackage;
 
     @ManyToOne
     @JoinColumn(name = "supporting_project_id")
     private SupportingProject supportingProject;
 
-<<<<<<< Updated upstream
     @ManyToOne
-    @JoinColumn(name = "supporting_package_id")
-    private ProjectPackage supportingPackage;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     private Integer packageCount;
-=======
-    @ManyToMany(mappedBy = "supportingPackages")
-    private Set<Order> orders = new HashSet<>(); // 역방향 다대다 관계
 
-    private String packageName;
-    private Long packagePrice;
-    private Long packageCount;
->>>>>>> Stashed changes
-
-
+    @Column(columnDefinition = "json")
+    private String OptionList;
 }
-

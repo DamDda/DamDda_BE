@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProjectImageRepository extends JpaRepository<ProjectImage, Long> {
+    ProjectImage findByProject_IdAndOrdAndImageType_Id(Long projectId, int ord, Long imageTypeId);
 
-    public List<ProjectImage> findAllByProjectId(Long projectId);
-    public List<ProjectImage> findAllByProjectIdOrderByOrd(Long projectId);
+    List<ProjectImage> findAllByProjectId(Long projectId);
+
+    List<ProjectImage> findAllByProjectIdOrderByOrd(Long projectId);
+
+    void deleteByUrlIn(List<String> urls);
 
 }

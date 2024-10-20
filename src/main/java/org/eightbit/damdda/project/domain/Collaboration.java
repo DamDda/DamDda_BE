@@ -3,14 +3,11 @@ package org.eightbit.damdda.project.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jshell.Snippet;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlIDREF;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Collaboration {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate savedAt;
@@ -33,19 +30,19 @@ public class Collaboration {
     private LocalDate receiverDeletedAt;
 
     // 굳이 member와 연동할 필요가 있나?
-    private Long userId;
+    private String userId;
 
-    @OneToOne
-    @JoinColumn(name="projectId")
+    @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 
     private Date approvalDate;
 
     @Builder.Default
-    private String approval="대기";
+    private String approval = "대기";
 
     private String collaborationText;
-    private String name;
+    private String name; //프로젝트 제목. -> 나중에 바꾸기.
     private String email;
     private String phoneNumber;
 
@@ -58,21 +55,31 @@ public class Collaboration {
     public void addSenderDeletedAt() {
         this.senderDeletedAt = LocalDate.now();
     }
+
     public void addReceiverDeletedAt() {
         this.receiverDeletedAt = LocalDate.now();
+    }
+
+    //json 역직렬화
+    public List<String> getCollabDocList() throws JsonProcessingException {
+        if (this.collabDocList == null || this.collabDocList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(this.collabDocList, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            return new ArrayList<>();
+        }
     }
 
     public void setCollabDocList(List<String> collabs) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         this.collabDocList = objectMapper.writeValueAsString(collabs);
     }
-    //json 역직렬화
-    public List<String> getCollabDocList() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.collabDocList,new TypeReference<List<String>>(){});
-    }
 
-    public void removeCollabDocList(){
+    public void removeCollabDocList() {
         this.collabDocList = null;
     }
 
@@ -96,10 +103,8 @@ public class Collaboration {
                     ", collabDocList=" + objectMapper.writeValueAsString(getCollabDocList()) +
                     '}';
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return "Error processing JSON";
+            throw new RuntimeException(e);
         }
     }
-
 
 }
