@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -46,26 +45,25 @@ public class ProjectServiceImpl implements ProjectService {
     private final SecurityContextUtil securityContextUtil;
 
     @Override
-    public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
+    public ProjectRegisterDetailDTO getProjectDetail(Long projectId) {
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
-        // TODO: 수정필요
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
-                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectImage::getUrl)  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<String> descriptionImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-                .map(projectImage -> projectImage.getUrl())
+                .map(ProjectImage::getUrl)
                 .collect(Collectors.toList());
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
 
         List<String> docs = projectDocs.stream()
-                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectDocument::getUrl)  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<Tag> tags = project.getTags();
@@ -73,7 +71,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        ProjectRegisterDetailDTO dto = ProjectRegisterDetailDTO.builder()
+        return ProjectRegisterDetailDTO.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
@@ -87,12 +85,11 @@ public class ProjectServiceImpl implements ProjectService {
                 .docs(docs)
                 .tags(tagDTOs)
                 .build();
-        return dto;
 
     }
 
     @Override
-    public Long getOrganizerId(Long projectId){
+    public Long getOrganizerId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
         return project.getMember().getId();
@@ -242,16 +239,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<WritingProjectDTO> getWritingProjectDTO(Long memberId) {
         List<Project> result = projectRepository.findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(memberId);
-        List<WritingProjectDTO> dtoList = result.stream()
-                .map(project -> {
-                    return WritingProjectDTO.builder()
-                            .id(project.getId())
-                            .title(project.getTitle())
-                            .build();
-                })
-                .collect(Collectors.toList());
 
-        return dtoList;
+        return result.stream()
+                .map(project -> WritingProjectDTO.builder()
+                        .id(project.getId())
+                        .title(project.getTitle())
+                        .build())
+                .collect(Collectors.toList());
 
     }
 
@@ -285,7 +279,9 @@ public class ProjectServiceImpl implements ProjectService {
         AdminApproval adminApproval = adminApprovalService.findByProjectId(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
 
-        ProjectDetailHostDTO projectDetailHostDTO = ProjectDetailHostDTO.builder()
+        // 좋아요 여부는 기본적으로 false
+
+        return ProjectDetailHostDTO.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
@@ -303,8 +299,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .productImages(productImages)
                 .tags(tagDTOs)
                 .build();
-
-        return projectDetailHostDTO;
     }
 
     @Override
@@ -329,7 +323,6 @@ public class ProjectServiceImpl implements ProjectService {
 
             List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
 
-            log.info(projectImages);
             List<String> productImages = projectImages.stream()
                     .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
 
@@ -348,7 +341,9 @@ public class ProjectServiceImpl implements ProjectService {
 
             project.setViewCnt(project.getViewCnt() + 1);
 
-            ProjectResponseDetailDTO projectResponseDetailDTO = ProjectResponseDetailDTO.builder()
+            // 좋아요 여부는 기본적으로 false
+
+            return ProjectResponseDetailDTO.builder()
                     .id(project.getId())
                     .title(project.getTitle())
                     .description(project.getDescription())
@@ -368,8 +363,6 @@ public class ProjectServiceImpl implements ProjectService {
                     .tags(tagDTOs)
                     .build();
 
-            return projectResponseDetailDTO;
-
         }
 
     }
@@ -379,7 +372,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-        List<Tag> delTags = tagService.delProjectFromTags(project);
+        tagService.delProjectFromTags(project);
 
         boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
@@ -470,7 +463,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
-        if(filesMeta == null || files == null) {
+        if (filesMeta == null || files == null) {
             return null;
         }
 
@@ -507,7 +500,7 @@ public class ProjectServiceImpl implements ProjectService {
                               List<MetaDTO> updateProductImage,
                               List<MetaDTO> updateDescriptionImage,
                               List<MetaDTO> updateDocs
-                              ) {
+    ) {
 
         List<FileDTO> productImagesFile = fileInputMeta(productImagesMeta, productImages);
         List<FileDTO> descriptionImagesFile = fileInputMeta(descriptionImagesMeta, descriptionImages);
@@ -516,7 +509,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        List<Tag> delTags = tagService.delProjectFromTags(project);
+        tagService.delProjectFromTags(project);
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
 
@@ -531,34 +524,31 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
 
 
-        List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
-        List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
+        List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, ProjectImage::setOrd);
+        List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, ProjectImage::setOrd);
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectId(projectId);
 
-        List<ProjectDocument> delDocs = updateFiles(updateDocs, projectDocs, ProjectDocument::getUrl, (ProjectDocument, ord) -> ProjectDocument.setOrd(ord));
+        List<ProjectDocument> delDocs = updateFiles(updateDocs, projectDocs, ProjectDocument::getUrl, ProjectDocument::setOrd);
 
         imgService.deleteImageFiles(delProductImages);
         imgService.deleteImageFiles(delDescriptionImages);
         docService.deleteDocFiles(delDocs);
 
-        log.info("check productImagesFile files : " + productImagesFile);
-        log.info("check productImagesFile files : " + productImagesFile);
-        if(productImagesFile != null && productImagesFile.size() > 0) {
+        if (productImagesFile != null && !productImagesFile.isEmpty()) {
             imgService.saveImages(project, productImagesFile, 1L);
         }
 
-        if(descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+        if (descriptionImagesFile != null && !descriptionImagesFile.isEmpty()) {
             imgService.saveImages(project, descriptionImagesFile, 3L);
         }
 
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
-        if(thumbnailImage != null) {
-            log.info("thumbnailImage : " + thumbnailImage);
+        if (thumbnailImage != null) {
             project.setThumbnailUrl(imgService.saveThumbnailImages(project, thumbnailImage));
         }
 
-        if(docsFile != null && docsFile.size() > 0) {
+        if (docsFile != null && !docsFile.isEmpty()) {
             docService.saveDocs(project, docsFile);
         }
 
@@ -586,6 +576,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<?> getDailySupportingByProjectId(Long projectId) {
-       return supportingProjectService.getDailySupportingByProjectId(projectId);
+        return supportingProjectService.getDailySupportingByProjectId(projectId);
     }
 }

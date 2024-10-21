@@ -7,20 +7,20 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "supporting_packages")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-
-public class  SupportingPackage {
+@EqualsAndHashCode(exclude = "order")
+public class SupportingPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long packageId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name = "project_package_id")
     private ProjectPackage projectPackage;
 
     @ManyToOne
@@ -28,7 +28,7 @@ public class  SupportingPackage {
     private SupportingProject supportingProject;
 
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     private Integer packageCount;

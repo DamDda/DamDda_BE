@@ -1,6 +1,8 @@
 package org.eightbit.damdda.member.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.eightbit.damdda.member.domain.Member;
 
 import javax.validation.constraints.NotNull;
@@ -9,8 +11,6 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 public class RegisterDTO {
-
-    // NotNull 및 Size 추가
 
     @NotNull(message = "ID를 입력해야만 회원가입이 가능합니다.")
     private String loginId;
@@ -49,18 +49,5 @@ public class RegisterDTO {
                 .detailedAddress(detailedAddress)
                 .postCode(postCode)
                 .build();
-    }
-
-    @Builder
-    public RegisterDTO(String loginId, String password, String nickname, String name, String email, String phoneNumber, String address, String detailedAddress, int postCode) {
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.detailedAddress = detailedAddress;
-        this.postCode = postCode;
     }
 }

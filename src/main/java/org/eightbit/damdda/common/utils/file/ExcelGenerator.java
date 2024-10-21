@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Log4j2
@@ -21,7 +24,7 @@ public class ExcelGenerator {
      * Generates an Excel file dynamically based on provided data and sheet name.
      *
      * @param sheetName The name of the Excel sheet to be created.
-     * @param data A list of maps, where each map represents a row with column names as keys.
+     * @param data      A list of maps, where each map represents a row with column names as keys.
      * @return A temporary file containing the generated Excel sheet.
      * @throws IOException If an I/O error occurs during file creation or writing.
      */
@@ -32,31 +35,37 @@ public class ExcelGenerator {
             throw new IllegalArgumentException("Data cannot be null or empty.");
         }
 
-        // Create a new Excel workbook and sheet
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(sheetName);
-        log.info("[Excel Generator] Created Excel sheet '{}'.", sheetName);
+        // Use try-with-resources to ensure the Workbook is closed properly
+        try (Workbook workbook = new XSSFWorkbook()) {
+            // Create a new sheet in the workbook
+            Sheet sheet = workbook.createSheet(sheetName);
+            log.info("[Excel Generator] Created Excel sheet '{}'.", sheetName);
 
-        // Extract headers from the first row of the data
-        List<String> headers = new ArrayList<>(data.get(0).keySet());
+            // Extract headers from the first row of the data
+            List<String> headers = new ArrayList<>(data.get(0).keySet());
 
-        // Create the header row
-        createHeaderRow(sheet, headers);
+            // Create the header row
+            createHeaderRow(sheet, headers);
 
-        // Create a reusable date cell style
-        CellStyle dateCellStyle = createDateCellStyle(workbook);
+            // Create a reusable date cell style
+            CellStyle dateCellStyle = createDateCellStyle(workbook);
 
-        // Fill the sheet with data rows
-        fillDataRows(sheet, headers, data, dateCellStyle);
+            // Fill the sheet with data rows
+            fillDataRows(sheet, headers, data, dateCellStyle);
 
-        // Write the workbook content to a temporary file
-        return writeToFile(workbook);
+            // Write the workbook content to a temporary file
+            return writeToFile(workbook);
+        } catch (IOException e) {
+            log.error("[Excel Generator] Failed to generate Excel file.", e);
+            throw e;
+        }
     }
+
 
     /**
      * Creates the header row based on the provided headers list.
      *
-     * @param sheet The sheet where the header row will be created.
+     * @param sheet   The sheet where the header row will be created.
      * @param headers A list of column names to use as headers.
      */
     private void createHeaderRow(Sheet sheet, List<String> headers) {
@@ -70,9 +79,9 @@ public class ExcelGenerator {
     /**
      * Fills the Excel sheet with data rows.
      *
-     * @param sheet The Excel sheet where data will be added.
-     * @param headers The list of headers (column names) to match data keys.
-     * @param data A list of maps where each map contains data for one row.
+     * @param sheet         The Excel sheet where data will be added.
+     * @param headers       The list of headers (column names) to match data keys.
+     * @param data          A list of maps where each map contains data for one row.
      * @param dateCellStyle The cell style for date values.
      */
     private void fillDataRows(Sheet sheet, List<String> headers, List<Map<String, Object>> data, CellStyle dateCellStyle) {
@@ -90,8 +99,8 @@ public class ExcelGenerator {
     /**
      * Sets the value of a cell based on the type of the provided value.
      *
-     * @param cell The Excel cell to set the value for.
-     * @param value The value to set in the cell.
+     * @param cell          The Excel cell to set the value for.
+     * @param value         The value to set in the cell.
      * @param dateCellStyle The cell style for date-type values.
      */
     private void setCellValue(Cell cell, Object value, CellStyle dateCellStyle) {

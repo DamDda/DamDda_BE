@@ -2,17 +2,14 @@ package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.user.User;
-import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.service.OrderService;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +29,7 @@ public class OrderController {
 
     //주문 생성
     @PostMapping("/create")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user) {
         orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
         OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
@@ -65,12 +62,10 @@ public class OrderController {
     }
 
     @PutMapping("/{paymentId}/cancel")
-    public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId,@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId, @RequestBody Map<String, Object> requestBody) {
         try {
             String status = (String) requestBody.get("paymentStatus");
-            // 서비스에서 결제 상태 취소 처리**********
-            /*paymentId -> paymentId가 들어가서 repository바꿈.*/
-            String message=orderService.cancelPayment(paymentId, status);
+            orderService.cancelPayment(paymentId, status);
             return ResponseEntity.ok("Payment canceled successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
@@ -96,22 +91,27 @@ public class OrderController {
         }
     }
 
-    // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
+    // 프로젝트의 통계 정보를 조회하는 엔드포인트
+    // - projectId에 해당하는 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 반환
     @GetMapping("/statistics/{projectId}")
     public ResponseEntity<ProjectStatisticsDTO> getProjectStatistics(@PathVariable Long projectId) {
-        ProjectStatisticsDTO statistics = orderService.getProjectStatistics(projectId);
-        return new ResponseEntity<>(statistics, HttpStatus.OK);
+        return ResponseEntity.ok(orderService.getProjectStatistics(projectId));
     }
 
+    // 엑셀 파일을 생성하여 S3에 업로드하고, presigned URL을 반환하는 엔드포인트
+    // - projectId에 해당하는 후원자 데이터를 엑셀 파일로 생성하고 S3에 업로드
+    // - 생성된 엑셀 파일에 대한 presigned URL을 반환
     @GetMapping("/{projectId}/supporters/excel")
     public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
-        // Generate the presigned URL by calling the service method
-        String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
-        // Return the presigned URL as a response
-        return ResponseEntity.ok(presignedUrl);
+        return ResponseEntity.ok(orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId));
     }
 
+    // 후원자 데이터를 JSON 형식으로 반환하는 엔드포인트
+    // - projectId에 해당하는 프로젝트의 후원자 정보를 JSON 형식의 리스트로 반환
+    @GetMapping("/{projectId}/supporters")
+    public ResponseEntity<List<Map<String, Object>>> getSupportersData(@PathVariable Long projectId) {
+        return ResponseEntity.ok(orderService.getSupportersData(projectId));
+    }
+
+
 }
-
-
-

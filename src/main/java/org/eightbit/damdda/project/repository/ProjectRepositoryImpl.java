@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    @Value("${server.recommendation.base-url}")
+    private String recommendationBaseUrl;
 
     public ProjectRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
@@ -63,16 +65,20 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         // 3. progress 필터
         if (progress != null) {
             LocalDateTime now = LocalDateTime.now();
-            if ("ongoing".equals(progress)) {
-                builder.and(project.startDate.before(now).and(project.endDate.after(now)));
-            } else if ("upcoming".equals(progress)) {
-                builder.and(project.startDate.after(now));
-            } else if ("completed".equals(progress)) {
-                builder.and(project.endDate.before(now));
+            switch (progress) {
+                case "ongoing":
+                    builder.and(project.startDate.before(now).and(project.endDate.after(now)));
+                    break;
+                case "upcoming":
+                    builder.and(project.startDate.after(now));
+                    break;
+                case "completed":
+                    builder.and(project.endDate.before(now));
+                    break;
             }
         }
 
-// 4. 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
+        // 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
         builder.and(project.deletedAt.isNull()); // deletedAt이 NULL인 항목만 조회
 
         // 4. 정렬 처리 (동적 정렬)
@@ -85,11 +91,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 .where(builder)
                 .orderBy(orderSpecifiers)
                 .fetch();
-
-        log.info("[project] Builder conditions: {}", builder.toString());
-        log.info("[project] Sort Conditions: {}", sortConditions);
-        log.info("[project] Order specifiers: {}", Arrays.toString(orderSpecifiers));
-
 
         // 전체 개수 조회
         long total = queryFactory.selectFrom(project)
@@ -106,7 +107,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 정렬 조건이 비어 있으면 기본 정렬 추가
         if (sortConditions == null || sortConditions.isEmpty()) {
-            log.info("[project] Sort conditions are empty, using default sort.");
             orderSpecifiers.add(project.id.desc());  // 기본 정렬 조건
         } else {
             for (String condition : sortConditions) {
@@ -132,11 +132,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                     case "createdAt":
                         orderSpecifiers.add(project.createdAt.desc());
                         break;
-//                    case "fundsReceive":
-//                        orderSpecifiers.add(project.fundsReceive.desc());
-//                        break;
                     default:
-                        log.warn("[project] Unknown sort condition: {}", condition);
                         break;
                 }
             }
@@ -145,16 +141,13 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         return orderSpecifiers.toArray(new OrderSpecifier<?>[0]);
     }
 
-    @Value("${recommendation.url}")
-    private String recommendationUrl;
-
     public Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable) {
         if (memberId == 0L) {
-            return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+            return findProjects(memberId, category, search, progress, List.of("likeCnt"), pageable);
         }
 
         try {
-            URL url = new URL(recommendationUrl + "api/recommend/" + memberId);
+            URL url = new URL(recommendationBaseUrl + "/api/recommend/" + memberId);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
@@ -175,14 +168,14 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 log.info("[project] RECOMMENDATION ORDER : {}", jsonArray.toString());
 
                 if (jsonArray.isEmpty()) {
-                    return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+                    return findProjects(memberId, category, search, progress, List.of("likeCnt"), pageable);
                 } else {
                     QProject project = QProject.project;
                     List<Project> content = jsonArray
                             .toList()
                             .stream()
                             .map(id -> {
-                                        Long projectId = Long.valueOf((Integer)id);
+                                        Long projectId = Long.valueOf((Integer) id);
                                         BooleanBuilder builder = new BooleanBuilder();
                                         builder.and(project.id.eq(projectId));
                                         return queryFactory
@@ -194,13 +187,12 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                             ).collect(Collectors.toList());
                     return new PageImpl<>(content, pageable, jsonArray.length());
                 }
-
             } else {
                 log.info("[project] GET Request failed, response code is {}", responseCode);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return null;

@@ -3,11 +3,10 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.common.utils.validation.ProjectValidator;
-import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,14 +41,12 @@ public class ProjectController {
             PageRequestDTO pageRequestDTO) {
         Long memberId = user == null ? 0L : user.getMemberId();
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
-        PageResponseDTO<ProjectBoxDTO> sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
-        return sortedProjects;
+        return projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
     }
 
     @GetMapping("/write/{projectId}")
     public ProjectRegisterDetailDTO getWriteProject(@PathVariable Long projectId) {
-        ProjectRegisterDetailDTO dto = projectService.getProjectDetail(projectId);
-        return dto;
+        return projectService.getProjectDetail(projectId);
     }
 
     @GetMapping("/write")
@@ -62,16 +59,14 @@ public class ProjectController {
     public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@AuthenticationPrincipal User user,
                                                               PageRequestDTO pageRequestDTO) {
         Long memberId = user.getMemberId();
-        PageResponseDTO<ProjectBoxDTO> projectBoxDTO = projectService.getListProjectBoxLikeDTO(memberId, pageRequestDTO);
-        return projectBoxDTO;
+        return projectService.getListProjectBoxLikeDTO(memberId, pageRequestDTO);
     }
 
     @GetMapping(value = "/myproject")
     public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@AuthenticationPrincipal User user,
                                                                PageRequestDTO pageRequestDTO) {
         Long memberId = user.getMemberId();
-        PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
-        return projectBoxHostDTO;
+        return projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
     }
 
 
@@ -79,8 +74,7 @@ public class ProjectController {
     public ProjectResponseDetailDTO readProjectDetail(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
         Long memberId = user == null ? 0L : user.getMemberId();
-        ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
-        return projectResponseDetailDTO;
+        return projectService.readProjectDetail(projectId, memberId);
     }
 
     @GetMapping("/myproject/{projectId}")
@@ -111,12 +105,9 @@ public class ProjectController {
                              @RequestParam(value = "submit", required = false) String submit,
                              @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
                              @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
-                             @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
-                             BindingResult bindingResult,
-                             RedirectAttributes redirectAttributes) {
+                             @RequestPart(value = "docs", required = false) List<MultipartFile> docs) {
         Long memberId = user.getMemberId();
-        Long projectId = projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
-        return projectId;
+        return projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
     }
 
     @PutMapping("/register/{projectId}")
