@@ -4,6 +4,7 @@ import org.eightbit.damdda.noticeandqna.domain.Notice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,6 +27,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
      */
     @Modifying
     @Transactional
-    @Query("UPDATE Notice n SET n.deletedAt = CURRENT_LocalDateTime WHERE n.id = :noticeId")
-    int softDeleteNotice(Long noticeId);
+    @Query("UPDATE Notice n SET n.deletedAt = current_timestamp WHERE n.id = :noticeId")
+    int softDeleteNotice(@Param("noticeId") Long noticeId);
 }
